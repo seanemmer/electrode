@@ -50,7 +50,7 @@ angular.module('core').controller('HeaderCtrl', ['$mdToast', '$location', '$http
 				controller: 'RegisterDialogCtrl'
 			})
 			.then(function() {
-				$location.path('/planning');
+				$state.go('planning');
 				
 				$mdToast.show($mdToast.simple()
 					.content('Successfully Registered!')
@@ -66,7 +66,7 @@ angular.module('core').controller('HeaderCtrl', ['$mdToast', '$location', '$http
 				controller: 'SignInDialogCtrl'
 			})
 			.then(function() {
-				$location.path('/planning');
+				$state.go('planning');
 
 				$mdToast.show($mdToast.simple()
 					.content('Successfully Signed In!')
