@@ -13,11 +13,8 @@ angular.module('users').controller('RegisterDialogCtrl', ['$timeout', '$scope', 
 				// If successful we assign the response to the global user model
 				$scope.authentication.user = response;
 
-				// Close dialog
+				// and close/resolve the dialog (triggering redirect to /planning)
 				$mdDialog.hide();
-
-				// And redirect to the planning page
-				$location.path('/planning');
 			}).error(function(response) {
 				$scope.error = response.message;
 			});
