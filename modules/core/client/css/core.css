@@ -152,6 +152,10 @@ md-toast {
   color: #00bcd4; }
 
 /* Planning Page */
+.history-filter {
+  width: 100%;
+  padding: 0 20px; }
+
 .history-toolbar-header {
   margin-top: 12px;
   background-color: #4dd0e1 !important;

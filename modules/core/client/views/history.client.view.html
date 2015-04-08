@@ -1,6 +1,31 @@
 <section>
-	<div layout="row" layout-align="center">
-		<div flex="66" layout="column" layout-align="center center">
+	<div layout="row" layout-align="space-around">
+
+		<!-- History Filters -->
+		<div flex="25" layout="column" layout-align="start start">
+			<md-toolbar class="history-toolbar-header">
+				<div layout="row" class="md-toolbar-tools" layout-align="space-between">
+					<h4 class="unbold">Filters</h4>
+				</div>
+			</md-toolbar>
+			<div layout="row" layout-align="space-between center" class="history-filter">
+				<h4 class="unbold">Year: </h4>
+				<md-select class="history-filter-select" ng-model="year">
+					<md-select-label>{{year}}</md-select-label>
+					<md-option ng-repeat="yearOption in yearOptions" ng-value="yearOption">{{yearOption}}</md-option>
+				</md-select>
+			</div>
+			<div layout="row" layout-align="space-between center" class="history-filter">
+			<h4 class="unbold">Month: </h4>
+				<md-select class="history-filter-select" ng-model="month">
+					<md-select-label>{{month}}</md-select-label>
+					<md-option ng-repeat="monthOption in monthOptions" ng-value="monthOption">{{monthOption}}</md-option>
+				</md-select>
+			</div>
+		</div>
+
+		<!-- History List -->
+		<div flex="60" layout="column" layout-align="start center">
 			<md-toolbar class="history-toolbar-header">
 				<div layout="row" class="md-toolbar-tools" layout-align="space-between">
 					<h4 class="unbold">Date</h4>
@@ -12,9 +37,10 @@
 				</div>
 			</md-toolbar>
 			<ul class="history-list">
-				<li ng-repeat="entry in entries" class="history-list-entry">
+								
+				<li ng-repeat="entry in filteredEntries =(entries | historyTable: year:month)" class="history-list-entry">
 					<div layout="row" layout-align="space-between">
-						<h4 class="unbold">{{entry.date}}</h4>
+						<h4 class="unbold">{{entry.month}} {{entry.day}}, {{entry.year}}</h4>
 						<div layout="row" layout-align="end">
 								<h4 class="unbold">{{entry.time}}</h4>&nbsp&nbsp&nbsp
 								<h4 class="unbold">/</h4>
@@ -24,6 +50,7 @@
 						</div>
 					</div>
 				</li>
+				<li class="text-center" style="margin-top: 12px;"ng-show="!filteredEntries.length">No charge entries (check filters)</span>
 			</ul>
 		</div>
 	</div>

@@ -22,16 +22,17 @@
 	"globals": { // Globals variables.
 		"angular": true,
 		"io": true,
-		"ApplicationConfiguration": true
+		"ApplicationConfiguration": true,
+		"Chart": true,
+		"moment": true,
+		"$": true,
+		"_": true
 	},
 	"predef": [ // Extra globals.
 		"inject",
 		"by",
 		"browser",
-		"element",
-		"Chart",
-		"moment",
-		"$"
+		"element"
 	],
 	"indent": 4, // Specify indentation spacing
 	"devel": true, // Allow development statements e.g. `console.log();`.
