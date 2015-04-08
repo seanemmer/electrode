@@ -1,0 +1,25 @@
+<section >
+	<div layout="column" layout-align="center center">
+		<h1>Overnight Charging Schedule</h1>
+		<div layout="row" layout-align="center" class="charge-circle-array">
+			
+			<div ng-repeat="setting in chargeSettings" layout="column" layout-align="top" class="charge-circle-container">
+				<div layout="column" layout-align="center center" class="charge-circle-day">
+					<span>{{setting.day}}</span>
+					<md-switch ng-model="setting.active" ng-change="activeSwitch($index)" aria-label="Switch {{$index}}">
+					</md-switch>
+				</div>
+				<div class="charge-circle fade" layout="column" layout-align="space-between center" ng-mouseenter="chargeCircleMouseenter($index)" ng-mouseleave="chargeCircleMouseleave($index)" ng-click="chargeCircleClick($index, $event)" ng-hide="!setting.active">
+					<div class="charge-circle-label">
+						<span>{{setting.time | limitTo : setting.time.length - 2 }}<span>{{setting.time | limitTo : -2}}</span></span>
+						<hr>
+						<p>{{setting.target}}%</p>
+					</div>
+					<md-progress-circular md-mode="determinate" ng-value="setting.target" md-diameter="100"></md-progress-circular>
+					<span class="charge-circle-edit-label">click to edit</span>
+				</div>
+			</div>
+		</div>
+		<md-button ng-show="scheduleDirty" ng-click="updateSchedule()" class="md-raised pink planning-save">Save Changes</md-button>
+	</div>
+</section>

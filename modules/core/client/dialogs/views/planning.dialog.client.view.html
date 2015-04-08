@@ -1,0 +1,30 @@
+<md-dialog class="standard-dialog planning-dialog" aria-label="planning-dialog">
+	<md-subheader class="md-sticky-no-effect">{{day}} Settings</md-subheader>	
+	<md-content class="sticky-container">	
+		<div class="dialog-content">
+			<div layout="column" layout-align="center center" class="charge-time-selector-container">
+				<h2>Completion Time</h2>
+				<div layout="row" layout-align="center center" class="charge-time-selector">
+					<md-select ng-model="hours">
+					  <md-option ng-value="opt" ng-repeat="opt in hourOpts">{{ opt }}</md-option>
+					</md-select>
+					<md-select ng-model="minutes">
+					  <md-option ng-value="opt" ng-repeat="opt in minuteOpts">{{ opt }}</md-option>
+					</md-select>
+					<md-select ng-model="meridian">
+					  <md-option ng-value="opt" ng-repeat="opt in meridianOpts">{{ opt }}</md-option>
+					</md-select>
+				</div>
+			</div>
+			<div layout="column" layout-align="center center" class="charge-target-slider-container">
+				<h2>Charge Target</h2>
+				<md-slider class="md-primary" ng-model="target" min="0" max="100" aria-label="new-charge-target"></md-slider>
+				<h2>{{target}}%</h3>
+			</div>
+		</div>
+	</md-content>
+	<div class="md-actions" layout="row">
+		<md-button ng-click="dialogCancel()">Cancel</md-button>
+		<md-button class="md-raised md-primary" ng-click="dialogConfirm()">Confirm</md-button>
+	</div>
+</md-dialog>

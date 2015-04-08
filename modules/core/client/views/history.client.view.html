@@ -1,0 +1,30 @@
+<section>
+	<div layout="row" layout-align="center">
+		<div flex="66" layout="column" layout-align="center center">
+			<md-toolbar class="history-toolbar-header">
+				<div layout="row" class="md-toolbar-tools" layout-align="space-between">
+					<h4 class="unbold">Date</h4>
+					<div layout="row" layout-align="end">
+						<h4 class="unbold">Time</h4> &nbsp&nbsp
+						<h4 class="unbold">/</h4> &nbsp&nbsp
+						<h4 class="unbold">Charge Target</h4>
+					</div>
+				</div>
+			</md-toolbar>
+			<ul class="history-list">
+				<li ng-repeat="entry in entries" class="history-list-entry">
+					<div layout="row" layout-align="space-between">
+						<h4 class="unbold">{{entry.date}}</h4>
+						<div layout="row" layout-align="end">
+								<h4 class="unbold">{{entry.time}}</h4>&nbsp&nbsp&nbsp
+								<h4 class="unbold">/</h4>
+							<div layout="row" layout-align="end" class="history-list-entry-target-container">
+								<h4 class="unbold">{{entry.target}}%</h4>
+							</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</section>

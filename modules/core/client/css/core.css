@@ -1,0 +1,180 @@
+/* sass-material-colors */
+/**
+ * Retrieves a color value from the $material-colors Sass map
+ * Inspired by https://github.com/nilskaspersson/Google-Material-UI-Color-Palette/
+ *
+ * @function
+ * @param {string} color-name             - quoted, lower-case, dasherized color
+ *                                          name (e.g. 'pink', 'amber')
+ * @param {string} [color-variant='500']  - quoted, lowercase color variant (e.g.
+ *                                          '200', 'a100')
+ */
+/* GENERAL */
+.unbold {
+  font-weight: normal; }
+
+.content {
+  margin-top: 50px; }
+
+.text-center {
+  text-align: center; }
+
+.fade {
+  transition: .5s linear all;
+  opacity: 1; }
+
+.fade.ng-hide {
+  opacity: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0; }
+
+.gap {
+  width: 24px; }
+
+md-select {
+  margin-top: 12px;
+  margin-bottom: 12px; }
+
+/* APP SPECIFIC */
+.hero-main {
+  margin-top: 60px;
+  margin-right: 40px;
+  margin-left: 40px;
+  max-width: 800px; }
+  .hero-main h1 {
+    font-size: 3.2em;
+    margin-bottom: 20px; }
+  .hero-main span {
+    font-size: 1.6em;
+    color: #616161;
+    color: rgba(0, 0, 0, 0.54); }
+  .hero-main .hero-buttons {
+    margin-top: 40px; }
+    .hero-main .hero-buttons button {
+      padding: 12px; }
+    .hero-main .hero-buttons span {
+      font-size: 18px; }
+
+.pink {
+  background-color: #ec407a !important; }
+
+md-toast {
+  background-color: #ec407a !important; }
+
+/* STANDARD DIALOG */
+.standard-dialog {
+  width: 600px; }
+  .standard-dialog md-content {
+    margin-top: 12px;
+    padding-bottom: 0; }
+  .standard-dialog .md-subheader {
+    background-color: #d4e157;
+    margin: 0; }
+  .standard-dialog .dialog-form-error {
+    margin-top: 16px;
+    margin-bottom: 0;
+    color: #f44336; }
+
+/* Planning Page */
+.charge-circle-array {
+  margin-top: 50px; }
+
+.charge-circle-container {
+  width: 130px;
+  height: 220px; }
+
+.charge-circle-day {
+  text-align: center; }
+  .charge-circle-day md-switch {
+    margin-top: 7px;
+    margin-left: 15px;
+    margin-bottom: 15px; }
+
+.charge-circle {
+  height: 150px;
+  cursor: pointer; }
+  .charge-circle md-progress-circular {
+    margin-top: -95px; }
+  .charge-circle .charge-circle-label {
+    margin-top: 47px;
+    margin-left: 1px;
+    width: 80px;
+    text-align: center; }
+    .charge-circle .charge-circle-label span {
+      font-size: 22px;
+      font-weight: bold; }
+      .charge-circle .charge-circle-label span span {
+        font-weight: normal;
+        font-size: 10px; }
+    .charge-circle .charge-circle-label hr {
+      margin-top: 0;
+      margin-bottom: 0;
+      width: 50px;
+      height: 2px;
+      border: 0;
+      background-color: #d4e157; }
+    .charge-circle .charge-circle-label p {
+      margin-top: -2px;
+      margin-bottom: 0;
+      font-size: 14px; }
+
+.charge-circle:hover {
+  box-shadow: 0 8px 17px rgba(0, 0, 0, 0.2); }
+  .charge-circle:hover .charge-circle-edit-label {
+    color: #ec407a; }
+
+.charge-circle-edit-label {
+  color: white;
+  font-size: 14px;
+  margin-bottom: 5px;
+  transition: 0.2s linear all; }
+
+.planning-save {
+  color: white !important;
+  margin-top: 20px;
+  padding: 8px 40px; }
+
+/* Planning Dialog */
+.planning-dialog md-content {
+  height: 280px; }
+.planning-dialog .charge-time-selector-container {
+  margin-bottom: 24px; }
+.planning-dialog .charge-time-selector {
+  font-size: 24px;
+  margin-top: 0;
+  color: #00bcd4; }
+  .planning-dialog .charge-time-selector md-select {
+    margin-bottom: 24px; }
+.planning-dialog .charge-target-slider-container md-slider {
+  width: 500px; }
+.planning-dialog .charge-target-slider-container h2:nth-child(3) {
+  color: #00bcd4; }
+
+/* Planning Page */
+.history-toolbar-header {
+  margin-top: 12px;
+  background-color: #4dd0e1 !important;
+  min-height: 48px;
+  height: 48px; }
+
+.history-list {
+  list-style-type: none;
+  margin-top: 12px;
+  padding: 0;
+  width: 100%; }
+  .history-list .history-list-entry {
+    padding: 12px 16px 12px 15px;
+    cursor: pointer; }
+    .history-list .history-list-entry .history-list-entry-target-container {
+      width: 48px; }
+  .history-list .history-list-entry:hover {
+    background-color: #f0f4c3; }
+
+/* Electricity Page */
+.pricing-date-select {
+  margin-top: 0;
+  margin-bottom: 40px; }
+
+.electricity-chart-container {
+  max-width: 800px !important; }

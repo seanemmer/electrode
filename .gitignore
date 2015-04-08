@@ -1,0 +1,11 @@
+.DS_Store
+.nodemonignore
+.sass-cache/
+npm-debug.log
+node_modules/
+public/lib/
+public/dist/
+.bower-*/
+.idea/
+uploads
+modules/users/client/img/profie/uploads
