@@ -6,11 +6,11 @@
 				be smart > get efficient > save the planet
 			</span>
 			<div class="hero-buttons" layout="row">
-					<md-button ng-click="homeRegister()" class="md-raised md-primary">Get Started</md-button>
+					<md-button ng-click="homeRegister($event)" class="md-raised md-primary">Get Started</md-button>
 				&nbsp&nbsp&nbsp
 				<md-button ui-sref="learn" class="md-raised md-accent">Learn More</md-button>
 				&nbsp&nbsp&nbsp
-				<md-button ng-show="!authentication.user" ng-click="homeSignIn()" class="md-raised">Sign In</md-button>
+				<md-button ng-show="!authentication.user" ng-click="homeSignIn($event)" class="md-raised">Sign In</md-button>
 			</div>
 		</div>
 	</div>

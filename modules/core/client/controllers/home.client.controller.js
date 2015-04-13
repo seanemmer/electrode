@@ -5,7 +5,7 @@ angular.module('core').controller('HomeCtrl', ['$mdToast', '$mdDialog', '$state'
 		// This provides Authentication context.
 		$scope.authentication = Authentication;
 
-		$scope.homeRegister = function($event) {
+		$scope.homeRegister = function(event) {
 			if(!$scope.authentication.user) {
 				$mdDialog.show({
 					targetEvent: event,
@@ -25,7 +25,7 @@ angular.module('core').controller('HomeCtrl', ['$mdToast', '$mdDialog', '$state'
 			}
 		};
 
-		$scope.homeSignIn = function($event) {
+		$scope.homeSignIn = function(event) {
 			if(!$scope.authentication.user) {
 				$mdDialog.show({
 					targetEvent: event,
