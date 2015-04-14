@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('core').controller('ElectricityCtrl', ['$scope', '$http',
+angular.module('core').controller('PricesCtrl', ['$scope', '$http',
 	function($scope, $http) {
 		$scope.date = moment();
 

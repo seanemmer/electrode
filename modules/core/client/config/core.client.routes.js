@@ -27,11 +27,6 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 				url: '/history',
 				templateUrl: 'modules/core/views/history.client.view.html',
 				controller: 'HistoryCtrl'
-			})
-			.state('electricity', {
-				url: '/electricity',
-				templateUrl: 'modules/core/views/electricity.client.view.html',
-				controller: 'ElectricityCtrl'
 			});
 	}
 ]);

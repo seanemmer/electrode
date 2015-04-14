@@ -28,7 +28,7 @@ var validateLocalStrategyPassword = function(password) {
  var scheduleDaySchema = new Schema({
  	day: {
  		type: String,
- 		match: /(Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day/,
+ 		enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
  		required: true
  	},
  	active: {

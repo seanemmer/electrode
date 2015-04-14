@@ -151,7 +151,7 @@ md-toast {
 .planning-dialog .charge-target-slider-container h2:nth-child(3) {
   color: #00bcd4; }
 
-/* Planning Page */
+/* History Page */
 .history-filter {
   width: 100%;
   padding: 0 20px; }
@@ -174,11 +174,3 @@ md-toast {
       width: 48px; }
   .history-list .history-list-entry:hover {
     background-color: #f0f4c3; }
-
-/* Electricity Page */
-.pricing-date-select {
-  margin-top: 0;
-  margin-bottom: 40px; }
-
-.electricity-chart-container {
-  max-width: 800px !important; }

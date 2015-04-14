@@ -18,10 +18,7 @@ var config = require('../config'),
 	passport = require('passport'),
 	flash = require('connect-flash'),
 	consolidate = require('consolidate'),
-	path = require('path'),
-	request = require('request'),
-	queryString = require('query-string'),
-	_ = require('lodash');
+	path = require('path');
 
 /**
  * Initialize local variables
@@ -167,23 +164,6 @@ module.exports.initModulesServerPolicies = function (app) {
 };
 
 /**
- * Configure CORS Proxy Server
- */
-module.exports.initCorsProxy = function (app) {
-
-	app.route('/cors-proxy')
-	.all(function(req, res, next) {
-		var requestURL = req.query.host + '?' + queryString.stringify(_.omit(req.query,'host'));
-
-		request(requestURL, function(error, response, body) {
-			if (!error && response.statusCode === 200) {
-			    res.json(response.body);
-			}
-		});
-	});
-};
-
-/**
  * Configure the modules server routes
  */
 module.exports.initModulesServerRoutes = function (app) {
@@ -257,9 +237,6 @@ module.exports.init = function (db) {
 
 	// Initialize modules server authorization policies
 	this.initModulesServerPolicies(app);
-
-	// Initialize CORS proxy
-	this.initCorsProxy(app);
 
 	// Initialize modules server routes
 	this.initModulesServerRoutes(app);

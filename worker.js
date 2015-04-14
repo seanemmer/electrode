@@ -2,4 +2,8 @@
 
 process.env.NODE_ENV = 'development';
 
-require('./jobs/agenda.js');
+var mongoose = require('./config/lib/mongoose');
+
+mongoose.connect(function() {
+	require('./worker/agenda.js');
+});

@@ -216,7 +216,7 @@ md-toast {
 	}
 }
 
-/* Planning Page */
+/* History Page */
 
 .history-filter {
 	width: 100%;
@@ -248,17 +248,4 @@ md-toast {
 	.history-list-entry:hover {
 		background-color: material-color('lime', '100')
 	}
-}
-
-
-
-/* Electricity Page */
-
-.pricing-date-select {
-	margin-top: 0;
-	margin-bottom: 40px;
-}
-
-.electricity-chart-container {
-	max-width: 800px !important;
 }

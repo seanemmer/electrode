@@ -18,7 +18,7 @@ angular.module('core').controller('HeaderCtrl', ['$mdToast', '$location', '$http
 				case 'history':
 					$scope.tabIndex = 1;
 					break;
-				case 'electricity':
+				case 'prices':
 					$scope.tabIndex = 2;
 					break;
 				default: 
@@ -39,7 +39,7 @@ angular.module('core').controller('HeaderCtrl', ['$mdToast', '$location', '$http
 			},
 			{
 				'name': 'Electricity Pricing',
-				'state': 'electricity',
+				'state': 'prices',
 			}
 		];
 
