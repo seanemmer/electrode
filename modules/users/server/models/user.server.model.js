@@ -22,33 +22,6 @@ var validateLocalStrategyPassword = function(password) {
 };
 
 /**
- * Schedule Schema
- */
-
- var scheduleDaySchema = new Schema({
- 	day: {
- 		type: String,
- 		enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
- 		required: true
- 	},
- 	active: {
- 		type: Boolean,
- 		required: true
- 	},
- 	time: {
- 		type: String,
- 		match: /([1-9]|1[0-2]):[0-5][0-9](AM|PM)/,
- 		required: true
- 	},
- 	target: {
- 		type: Number,
- 		min: 0,
- 		max: 100,
- 		required: true
- 	}
- });
-
-/**
  * User Schema
  */
 
@@ -82,11 +55,10 @@ var UserSchema = new Schema({
 		default: '',
 		validate: [validateLocalStrategyPassword, 'Password must be at least 6 characters']
 	},
-	
-	// array of schedule objects generated in planning
-	schedule: [scheduleDaySchema],
+
 	// array of vehicle objectes
 	vehicles: [{ type: Schema.ObjectId, ref: 'Vehicle' }],
+	
 	salt: {
 		type: String
 	},

@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('users').controller('RegisterDialogCtrl', ['$timeout', '$scope', '$mdDialog','$http', '$location', 'Authentication',
-	function($timeout, $scope, $mdDialog, $http, $location, Authentication) {
+angular.module('users').controller('RegisterDialogCtrl', ['$q', 'Vehicles', '$timeout', '$scope', '$mdDialog','$http', '$location', 'Authentication',
+	function($q, Vehicles, $timeout, $scope, $mdDialog, $http, $location, Authentication) {
 		$scope.authentication = Authentication;
 
 		$scope.dialogCancel = function() {
@@ -9,14 +9,31 @@ angular.module('users').controller('RegisterDialogCtrl', ['$timeout', '$scope', 
 		};
 
 		$scope.dialogRegister = function() {
-			$http.post('/api/auth/register', $scope.credentials).success(function(response) {
-				// If successful we assign the response to the global user model
-				$scope.authentication.user = response;
+			$http.post('/api/auth/register', $scope.credentials)
+			.then(function(payload) {
 
-				// and close/resolve the dialog (triggering redirect to /planning)
+				// If successful we assign the response to the global user model
+				$scope.authentication.user = payload.data;
+
+				// and create a default vehicle
+				var newVehicle = new Vehicles({
+					'user': $scope.authentication.user.id,
+					'manufacturer': 'Tesla',
+					'model': 'Model S'
+				});
+
+				return newVehicle.$save();
+
+			}, function(response) {
+				return $q.reject(response);
+			})
+			.then(function(payload) {
+
+				// Close/resolve the dialog (triggering redirect to /planning)
 				$mdDialog.hide();
-			}).error(function(response) {
-				$scope.error = response.message;
+
+			}, function(response) {
+				$scope.error = response.data.message;
 			});
 		};
 	}

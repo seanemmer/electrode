@@ -1,0 +1,119 @@
+/* sass-material-colors */
+@import '../../../../public/lib/sass-material-colors/sass/sass-material-colors';
+
+/* Planning Page */
+
+.charge-circle-array {
+	margin-top: 40px;
+}
+
+.charge-circle-container {
+	width: 130px;
+	height: 220px;
+}
+
+.charge-circle-day {
+	text-align: center;
+
+	md-switch {
+		margin-top: 7px;
+		margin-left: 15px;
+		margin-bottom: 15px;
+	}
+}
+
+.charge-circle {
+	height: 150px;
+	cursor: pointer;
+
+	md-progress-circular {
+		margin-top: -95px;
+	}
+
+	.charge-circle-label {
+		margin-top: 47px;
+		margin-left: 1px;
+		width: 80px;
+		text-align:center;
+
+		span {
+			font-size: 22px;
+			font-weight: bold;
+			
+			// am + pm
+			span {
+				font-weight: normal;
+				font-size: 10px;
+			}
+		}
+
+		hr {
+			margin-top: 0;
+			margin-bottom: 0;
+			width: 50px;
+			height: 2px;
+			border: 0;
+			background-color: material-color('lime', '400');
+		}
+
+		p {
+			margin-top: -2px;
+			margin-bottom: 0;
+			font-size: 14px;
+		}
+	}
+}
+
+.charge-circle:hover {
+	box-shadow: 0 8px 17px rgba(0, 0, 0, 0.2);
+
+	.charge-circle-edit-label{
+		color: material-color('pink', '400');
+	}
+}
+
+.charge-circle-edit-label {
+	color: white;
+	font-size: 14px;
+	margin-bottom: 5px;
+	transition: 0.2s linear all;
+}
+
+.planning-save {
+	color: white !important;
+	margin-top: 20px;
+	padding: 8px 40px;
+}
+
+/* Planning Dialog */
+
+.planning-dialog {
+
+	md-content {
+		height: 280px;
+	}
+
+	.charge-time-selector-container {
+		margin-bottom: 24px;
+	}
+
+	.charge-time-selector {
+		font-size: 24px;
+		margin-top: 0;
+		color: material-color('cyan', '500');
+
+		md-select {
+			margin-bottom: 24px;
+		}
+	}
+
+	.charge-target-slider-container {
+		md-slider {
+			width: 500px;
+		}
+
+		h2:nth-child(3) {
+			color:material-color('cyan', '500');
+		}
+	}
+}

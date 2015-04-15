@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('core').controller('PlanningDialogCtrl', ['currentData', '$scope', '$mdDialog',
+angular.module('vehicles').controller('PlanningDialogCtrl', ['currentData', '$scope', '$mdDialog',
 	function(currentData, $scope, $mdDialog) {
 		
 		$scope.day = currentData.day;

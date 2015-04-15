@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('core').controller('PlanningCtrl', ['$mdToast', 'Users', 'Authentication', '$timeout', '$scope', '$mdDialog',
+angular.module('vehicles').controller('PlanningCtrl', ['$mdToast', 'Users', 'Authentication', '$timeout', '$scope', '$mdDialog',
 	function($mdToast, Users, Authentication, $timeout, $scope, $mdDialog) {
 		$scope.authentication = Authentication;
 
@@ -96,7 +96,7 @@ angular.module('core').controller('PlanningCtrl', ['$mdToast', 'Users', 'Authent
 
 		$scope.chargeCircleClick = function(index, event) {
 			$mdDialog.show({
-				templateUrl: 'modules/core/dialogs/views/planning.dialog.client.view.html',
+				templateUrl: 'modules/vehicles/dialogs/views/planning.dialog.client.view.html',
 				targetEvent: event,
 				controller: 'PlanningDialogCtrl',
 				clickOutsideToClose: false,
