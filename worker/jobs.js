@@ -4,6 +4,8 @@ var agenda = require('agenda')(),
 	mongoose = require('mongoose'),
 	jobs = mongoose.connection.collection('jobs');
 
+// Connect to job queue
+
 jobs.ensureIndex({
     nextRunAt: 1, 
     lockedAt: 1, 
@@ -12,6 +14,8 @@ jobs.ensureIndex({
 }, function() {});
 
 agenda.mongo(jobs);
+
+// Execute jobs
 
 var jobTypes = process.env.JOB_TYPES ? process.env.JOB_TYPES.split(',') : [];
 

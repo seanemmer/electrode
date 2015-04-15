@@ -7,7 +7,6 @@ var config = require('../../config/config'),
 	request = require('request'),
 	Q = require('q'),
 	querystring = require('querystring'),
-	_ = require('lodash'),
 	path = require('path'),
 	errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
 	mongoose = require('mongoose'),
@@ -17,8 +16,6 @@ var config = require('../../config/config'),
 module.exports = function(agenda) {
 
 	// Create agenda jobs
-
-	agenda.purge(function(err, numRemoved) {});
 
 	agenda.define('dailyPullComEd', function(job, done){
 
@@ -50,8 +47,11 @@ module.exports = function(agenda) {
 			done();
 
 		}, function(forwardError, realTimeError) {
-			console.log(forwardError);
-			console.log(realTimeError);
+			if(forwardError) console.log(forwardError);
+			if(realTimeError) console.log(realTimeError);
+
+			// recursively call job if either HTTP request fails
+			agenda.now('dailyPullComEd');
 		})
 		.then(function() {
 			done();
@@ -76,17 +76,14 @@ module.exports = function(agenda) {
 
 		}, function(reason) {
 			console.log(reason);
+
+			// recursively call job if HTTP request fails
+			agenda.now('hourlyPullComEd');
 		})
 		.then(function() {
 			done();
 		});
 	});
-
-	// Schedule jobs
-
-	//var dailyPullComEd = agenda.create('dailyPullComEd').schedule('3:10pm').repeatEvery('5 minutes').save();
-
-	var hourlyPullComEd = agenda.create('hourlyPullComEd').schedule('3:10pm').repeatEvery('1 hour').save();	
 
 	// function to request and Parse data from ComEd
 	function getPricing(type, date) {

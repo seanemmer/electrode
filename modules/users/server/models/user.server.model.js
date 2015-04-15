@@ -85,7 +85,8 @@ var UserSchema = new Schema({
 	
 	// array of schedule objects generated in planning
 	schedule: [scheduleDaySchema],
-
+	// array of vehicle objectes
+	vehicles: [{ type: Schema.ObjectId, ref: 'Vehicle' }],
 	salt: {
 		type: String
 	},
