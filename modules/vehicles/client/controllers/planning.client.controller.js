@@ -2,7 +2,6 @@
 
 angular.module('vehicles').controller('PlanningCtrl', ['$mdToast', 'Vehicles', 'Users', 'Authentication', '$timeout', '$scope', '$mdDialog',
 	function($mdToast, Vehicles, Users, Authentication, $timeout, $scope, $mdDialog) {
-		console.log(Authentication);
 		$scope.authentication = Authentication;
 		var initialSchedule = Authentication.user.vehicles[0].schedule;
 
@@ -132,7 +131,7 @@ angular.module('vehicles').controller('PlanningCtrl', ['$mdToast', 'Vehicles', '
 				
 			}, function(error) {
 				$mdToast.show($mdToast.simple()
-					.content('Unable to save: ' + error.data.message)
+					.content('Unable to save: ' + (error.data.message || 'Database error'))
 					.position('bottom right')
 				);
 			});
