@@ -34,7 +34,7 @@ exports.isAllowed = function(req, res, next) {
 	var roles = (req.user) ? req.user.roles : ['guest'];
 
 	// If an vehicle is being processed and the current user created it then allow any manipulation
-	if (req.vehicle && req.user && req.vehicle.user.id === req.user.id) {
+	if (req.vehicle && req.user && req.vehicle.user.toString() === req.user.id) {
 		return next();
 	}
 

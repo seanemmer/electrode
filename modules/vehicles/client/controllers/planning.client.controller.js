@@ -1,10 +1,10 @@
 'use strict';
 
-angular.module('vehicles').controller('PlanningCtrl', ['$mdToast', 'Users', 'Authentication', '$timeout', '$scope', '$mdDialog',
-	function($mdToast, Users, Authentication, $timeout, $scope, $mdDialog) {
+angular.module('vehicles').controller('PlanningCtrl', ['$mdToast', 'Vehicles', 'Users', 'Authentication', '$timeout', '$scope', '$mdDialog',
+	function($mdToast, Vehicles, Users, Authentication, $timeout, $scope, $mdDialog) {
+		console.log(Authentication);
 		$scope.authentication = Authentication;
-
-		var initialSchedule = $scope.authentication.user.schedule;
+		var initialSchedule = Authentication.user.vehicles[0].schedule;
 
 		// initialize chargeSettings array 
 		$scope.chargeSettings = [
@@ -75,7 +75,7 @@ angular.module('vehicles').controller('PlanningCtrl', ['$mdToast', 'Users', 'Aut
 			}, 0);
 		}
 
-		// Set watch function for dirty checking schedule
+		// Set watch function for dirty-checking schedule
 		$timeout(function() {
 			$scope.$watch('chargeSettings', function(newVal, oldVal) {
 				$scope.scheduleDirty = !equalSchedules(initialSchedule, newVal);
@@ -111,27 +111,28 @@ angular.module('vehicles').controller('PlanningCtrl', ['$mdToast', 'Users', 'Aut
 		};
 
 		// HTTP Update Request
-
 		$scope.updateSchedule = function() {
-			$scope.authentication.user.schedule = $scope.chargeSettings;
-			var user = new Users($scope.authentication.user);
+			var tempVehicle = Authentication.user.vehicles[0];
+			tempVehicle.schedule = $scope.chargeSettings;
+			
+			var vehicle = new Vehicles(tempVehicle);
 
-			user.$update(function(response) {
+			vehicle.$update(function(payload) {
 				$mdToast.show($mdToast.simple()
 					.content('Updated Schedule Saved!')
 					.position('bottom right')
 				);
 
 				// Update global user object
-				$scope.authentication.user = response;
+				Authentication.user.vehicles[0] = payload;
 				
 				// Update initial schedule variable and remove 'save' button
-				initialSchedule = response.schedule;
+				initialSchedule = payload.schedule;
 				$scope.scheduleDirty = false;
 				
-			}, function(response) {
+			}, function(error) {
 				$mdToast.show($mdToast.simple()
-					.content(response.data.message)
+					.content('Unable to save: ' + error.data.message)
 					.position('bottom right')
 				);
 			});

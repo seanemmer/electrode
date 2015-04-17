@@ -37,7 +37,17 @@ exports.update = function (req, res) {
 					if (err) {
 						res.status(400).send(err);
 					} else {
-						res.json(user);
+						// populate vehicles in User
+						User
+						.findById(user._id)
+						.populate('vehicles')
+						.exec(function(err, user) {
+							if(err) {
+								res.status(400).send(err);
+							} else {
+								res.json(user);
+							}
+						});
 					}
 				});
 			}

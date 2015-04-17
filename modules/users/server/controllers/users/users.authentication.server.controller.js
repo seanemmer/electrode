@@ -59,11 +59,21 @@ exports.signin = function(req, res, next) {
 			user.password = undefined;
 			user.salt = undefined;
 
-			req.login(user, function(err) {
+			req.login(user, function (err) {
 				if (err) {
 					res.status(400).send(err);
 				} else {
-					res.json(user);
+					// populate vehicles in User
+					User
+					.findById(user._id)
+					.populate('vehicles')
+					.exec(function(err, user) {
+						if(err) {
+							res.status(400).send(err);
+						} else {
+							res.json(user);
+						}
+					});
 				}
 			});
 		}
