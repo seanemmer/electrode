@@ -35,6 +35,7 @@
     "helmet": "~0.4.0",
     "lodash": "~2.4.1",
     "method-override": "~2.3.0",
+    "moment": "^2.10.2",
     "mongoose": "~3.8.8",
     "morgan": "~1.4.1",
     "multer": "0.1.6",

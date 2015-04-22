@@ -3,7 +3,11 @@
 angular.module('vehicles').controller('PlanningCtrl', ['$mdToast', 'Vehicles', 'Users', 'Authentication', '$timeout', '$scope', '$mdDialog',
 	function($mdToast, Vehicles, Users, Authentication, $timeout, $scope, $mdDialog) {
 		$scope.authentication = Authentication;
-		var initialSchedule = Authentication.user.vehicles[0].schedule;
+		$scope.currentVehicle = _.find(Authentication.user.vehicles, function(vehicle) {
+			return vehicle.primary === true;
+		});
+
+		var initialSchedule = angular.copy($scope.currentVehicle.schedule);
 
 		// initialize chargeSettings array 
 		$scope.chargeSettings = [
@@ -111,7 +115,7 @@ angular.module('vehicles').controller('PlanningCtrl', ['$mdToast', 'Vehicles', '
 
 		// HTTP Update Request
 		$scope.updateSchedule = function() {
-			var tempVehicle = Authentication.user.vehicles[0];
+			var tempVehicle = $scope.currentVehicle;
 			tempVehicle.schedule = $scope.chargeSettings;
 			
 			var vehicle = new Vehicles(tempVehicle);
@@ -123,7 +127,7 @@ angular.module('vehicles').controller('PlanningCtrl', ['$mdToast', 'Vehicles', '
 				);
 
 				// Update global user object
-				Authentication.user.vehicles[0] = payload;
+				$scope.currentVehicle = payload;
 				
 				// Update initial schedule variable and remove 'save' button
 				initialSchedule = payload.schedule;

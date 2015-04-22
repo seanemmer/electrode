@@ -20,6 +20,6 @@ agenda.mongo(jobs);
 agenda.purge(function(err, numRemoved) {});
 
 var dailyPullComEd = agenda.create('dailyPullComEd').schedule('4:25pm').repeatEvery('5 minutes').save();
-var hourlyPullComEd = agenda.create('hourlyPullComEd').schedule('4:25pm').repeatEvery('1 hour').save();	
+var hourlyPullComEd = agenda.create('hourlyPullComEd').schedule('10:28am').repeatEvery('1 minute').save();	
 
 module.exports = agenda;

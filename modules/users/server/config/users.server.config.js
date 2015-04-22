@@ -18,7 +18,7 @@ module.exports = function(app, db) {
 	passport.deserializeUser(function(id, done) {
 		User.findOne({ _id: id })
 		.select('-salt -password')
-		.populate('vehicles')
+		.populate('vehicles', '-charges')
 		.exec(function(err, user) {
 			done(err, user);
 		});

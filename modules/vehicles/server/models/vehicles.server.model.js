@@ -9,7 +9,7 @@ var _ = require('lodash'),
 	Schema = mongoose.Schema;
 
 /**
- * Schedule Schema
+ * Schedule Day Schema
  */
 
  var ScheduleDaySchema = new Schema({
@@ -36,50 +36,22 @@ var _ = require('lodash'),
  });
 
 /**
- * Zap Schema
- */
-
-var ZapSchema = new Schema({
-	startTime: {
-		type: Date
-	},
-	endTime: {
-		type: Date
-	},
-	startState: {
- 		type: Number,
- 		min: 0,
- 		max: 100
-	},
-	endState: {
- 		type: Number,
- 		min: 0,
- 		max: 120
-	}
-});
-
-/**
- * Charge Schema
- */
-
-var ChargeSchema = new Schema({
-	date: {
-		type: Date,
-		required: true
-	},
-
-	// A 'charge' consists of multiple continuous 'zaps'
-	zaps: [ZapSchema]
-});
-
-/**
  * Vehicle Schema
  */
 
 var VehicleSchema = new Schema({
 	user: {
 		type: Schema.ObjectId,
-		ref: 'User'
+		ref: 'User',
+		index: true,
+		required: true
+	},
+	primary: {
+		type: Boolean,
+		// ensures only one document can be true at a time
+		unique: true,
+		sparse: true,
+		default: null
 	},
 	manufacturer: {
 		type: String,
@@ -104,14 +76,23 @@ var VehicleSchema = new Schema({
 		default: false,
 		required: true
 	},
+/*	// array to store velocity vector, which is re-computed daily
+	velocityVector: [Number],*/
 
 	// schedule generated in planning view (array of scheduleDays)
-	schedule: [ScheduleDaySchema],
-
-	// charges stored as they occur
-	charges: [ChargeSchema]
+	schedule: [ScheduleDaySchema]
 
 });
+
+/*// Validate that the velocity vector contains 100 positive values
+VehicleSchema.path('velocityVector').validate(function(vector) {
+	var positive = true;
+	vector.forEach(function(element) {
+		if (element < 0) { positive = false; }
+	});
+	return positive && vector.length === 100;
+
+}, 'Velocity vector incomplete or invalid');*/
 
 // Validate that schedule includes each day of week only once
 VehicleSchema.path('schedule').validate(function(schedule) {

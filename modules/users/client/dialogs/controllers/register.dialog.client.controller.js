@@ -15,9 +15,9 @@ angular.module('users').controller('RegisterDialogCtrl', ['Users', 'Vehicles', '
 				// If successful we assign the newly registered user to the global user model
 				Authentication.user = payload.data;
 
-				// and create a default vehicle
 				var newVehicle = new Vehicles({
 					'user': Authentication.user.id,
+					'primary': true,
 					'manufacturer': 'Tesla',
 					'model': 'Model S'
 				});

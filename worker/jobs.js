@@ -20,7 +20,7 @@ agenda.mongo(jobs);
 var jobTypes = process.env.JOB_TYPES ? process.env.JOB_TYPES.split(',') : [];
 
 jobTypes.forEach(function(type)  {
-	require('./jobs/' + type)(agenda);
+	require('./jobs/' + type + '.job')(agenda);
 });
 
 if(jobTypes.length) {

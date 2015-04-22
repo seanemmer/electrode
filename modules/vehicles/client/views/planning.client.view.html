@@ -1,13 +1,13 @@
 <section >
 	<div layout="column" layout-align="center center">
 		<h1>Overnight Charging Schedule</h1>
-		<h2 class="unbold light-gray subheader">Tesla Model S</h2>
+		<h2 class="unbold light-gray subheader">{{currentVehicle.manufacturer}} {{currentVehicle.model}}</h2>
 		<div layout="row" layout-align="center" class="charge-circle-array">
 			
 			<div ng-repeat="setting in chargeSettings" layout="column" layout-align="top" class="charge-circle-container">
 				<div layout="column" layout-align="center center" class="charge-circle-day">
 					<span>{{setting.day}}</span>
-					<md-switch ng-model="setting.active" ng-change="activeSwitch($index)" aria-label="Switch {{$index}}">
+					<md-switch ng-model="setting.active" aria-label="Switch {{$index}}">
 					</md-switch>
 				</div>
 				<div class="charge-circle fade" layout="column" layout-align="space-between center" ng-mouseenter="chargeCircleMouseenter($index)" ng-mouseleave="chargeCircleMouseleave($index)" ng-click="chargeCircleClick($index, $event)" ng-hide="!setting.active">
@@ -20,6 +20,7 @@
 					<span class="charge-circle-edit-label">click to edit</span>
 				</div>
 			</div>
+
 		</div>
 		<md-button ng-show="scheduleDirty" ng-click="updateSchedule()" class="md-raised pink planning-save">Save Changes</md-button>
 	</div>

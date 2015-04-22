@@ -10,7 +10,7 @@ var _ = require('lodash'),
 	Vehicle = mongoose.model('Vehicle');
 
 /**
- * Create a Vehicle
+ * Create a vehicle
  */
 exports.create = function(req, res) {
 	var vehicle = new Vehicle(req.body);
@@ -27,9 +27,11 @@ exports.create = function(req, res) {
 	});
 };
 
+/**
+ * Update a vehicle
+ */
 exports.update = function(req, res) {
 	var vehicle = req.vehicle;
-
 	vehicle.schedule = req.body.schedule;
 
 	vehicle.save(function(err) {

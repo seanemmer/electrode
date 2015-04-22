@@ -15,6 +15,9 @@ var config = require('../../config/config'),
 
 module.exports = function(agenda) {
 
+	// initialize http fail counter
+	var httpFails = 0;
+
 	// Create agenda jobs
 
 	agenda.define('dailyPullComEd', function(job, done){
@@ -25,6 +28,8 @@ module.exports = function(agenda) {
 			getPricing('day', '20150414')
 		])
 		.spread(function(forwardPayload, realTimePayload) {
+			// reset http fail counter
+			httpFails = 0;
 
 			// Save pricing data to new price document
 			var dataDate = new Date();
@@ -39,19 +44,20 @@ module.exports = function(agenda) {
 
 			price.save(function(err) {
 				if(err) {
-					console.log('Database error (daily data): ' + errorHandler.getErrorMessage(err));
+					return console.log('Database error (daily data): ' + errorHandler.getErrorMessage(err));
 				}
 				console.log('Saved ComEd daily data to ' + config.db + ' at ' + new Date());
 			});
-
-			done();
 
 		}, function(forwardError, realTimeError) {
 			if(forwardError) console.log(forwardError);
 			if(realTimeError) console.log(realTimeError);
 
-			// recursively call job if either HTTP request fails
-			agenda.now('dailyPullComEd');
+			// recursively call job if either HTTP request fails (disabled after 4 tries)
+			if(httpFails < 4) {
+				agenda.now('dailyPullComed');
+				httpFails++;
+			}
 		})
 		.then(function() {
 			done();
@@ -62,30 +68,45 @@ module.exports = function(agenda) {
 		// Pull real-time pricing data
 		getPricing('day', '20150414')
 		.then(function(payload) {
+			// reset http fail counter
+			httpFails = 0;
 
 			// Update pricing data on existing price document
 			var dataDate = new Date();
 			dataDate.setHours(0,0,0,0);
 
-			Price.update({ date: dataDate }, { realTime: payload }, function (err) {
+			Price.findOne({ date: dataDate }, function(err, price) {
 				if(err) {
-					console.log('Database error (hourly data): ' + errorHandler.getErrorMessage(err));
+					return console.log('Database error (hourly data): ' + errorHandler.getErrorMessage(err));
+				} else if(price === null) {
+					return console.log('Database error (hourly data): Daily data document not yet created, please do so before retreiving hourly data');
 				}
-				console.log('Saved ComEd hourly data to ' + config.db + ' at ' + new Date());
+
+				price.realTime = payload;
+
+				price.save(function(err) {
+					if(err) {
+						return console.log('Database error (hourly data): ' + errorHandler.getErrorMessage(err));
+					}
+					console.log('Saved ComEd hourly data to ' + config.db + ' at ' + new Date());					
+				});
 			});
 
 		}, function(reason) {
 			console.log(reason);
 
-			// recursively call job if HTTP request fails
-			agenda.now('hourlyPullComEd');
+			// recursively call job if HTTP request fails (disabled after 4 tries)
+			if(httpFails < 4) {
+				agenda.now('hourlyPullComEd');
+				httpFails++;
+			}
 		})
 		.then(function() {
 			done();
 		});
 	});
 
-	// function to request and Parse data from ComEd
+	// function to request and parse data from ComEd
 	function getPricing(type, date) {
 		// returns a Q promise
 		var deferred = Q.defer();
@@ -126,5 +147,4 @@ module.exports = function(agenda) {
 
 		return deferred.promise;
 	}
-
 };
