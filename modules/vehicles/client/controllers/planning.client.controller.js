@@ -8,6 +8,7 @@ angular.module('vehicles').controller('PlanningCtrl', ['$mdToast', 'Vehicles', '
 		});
 
 		var initialSchedule = angular.copy($scope.currentVehicle.schedule);
+		$scope.saveButtonText = initialSchedule.length === 0 ? 'Establish Schedule!' : 'Save Changes';
 
 		// initialize chargeSettings array 
 		$scope.chargeSettings = [
@@ -63,9 +64,6 @@ angular.module('vehicles').controller('PlanningCtrl', ['$mdToast', 'Vehicles', '
 					setting.active = true;
 					setting.target = 85;
 				});
-
-				// initialSchedule variable for dirty checking
-				initialSchedule = angular.copy($scope.chargeSettings);		
 			}, 0);	
 		} else {
 			// else assign schedule from User Object to scope (assigned to initialSchedule above)
@@ -86,6 +84,8 @@ angular.module('vehicles').controller('PlanningCtrl', ['$mdToast', 'Vehicles', '
 		}, 0);
 
 		function equalSchedules(initial, current) {
+			if (initial.length !== 7) { return false; }
+
 			var equality = true;
 			initial.forEach(function(scheduleDay, index) {
 				if (scheduleDay.active !== current[index].active ||
@@ -129,6 +129,11 @@ angular.module('vehicles').controller('PlanningCtrl', ['$mdToast', 'Vehicles', '
 				// Update global user object
 				$scope.currentVehicle = payload;
 				
+				// If first time establishing schedule, change save button text
+				if(initialSchedule.length === 0) {
+					$scope.saveButtonText = 'Save Changes';
+				}
+
 				// Update initial schedule variable and remove 'save' button
 				initialSchedule = payload.schedule;
 				$scope.scheduleDirty = false;

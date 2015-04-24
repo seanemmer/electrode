@@ -15,95 +15,111 @@ var config = require('../../config/config'),
 
 module.exports = function(agenda) {
 
-	// initialize http fail counter
-	var httpFails = 0;
-
 	// Create agenda jobs
 
 	agenda.define('dailyPullComEd', function(job, done){
 
-		// Unified promise to pull forward and real-time pricing data simultaneously
-		Q.all([
-			getPricing('daynexttoday', '20150414'),
-			getPricing('day', '20150414')
-		])
-		.spread(function(forwardPayload, realTimePayload) {
-			// reset http fail counter
-			httpFails = 0;
+		// initialize http fail counter
+		var httpFails = 0;
 
-			// Save pricing data to new price document
-			var dataDate = new Date();
-			dataDate.setHours(0,0,0,0);
+		pullDailyData();
 
-			var price = new Price({
-				'utility': 'ComEd',
-				'date': dataDate,
-				'forward': forwardPayload,
-				'realTime': realTimePayload
-			});
+		function pullDailyData() {
+			// Unified promise to pull forward and real-time pricing data simultaneously
+			Q.all([
+				getPricing('daynexttoday', '20150414'),
+				getPricing('day', '20150414')
+			])
+			.spread(function(forwardPayload, realTimePayload) {
+				// reset http fail counter
+				httpFails = 0;
 
-			price.save(function(err) {
-				if(err) {
-					return console.log('Database error (daily data): ' + errorHandler.getErrorMessage(err));
-				}
-				console.log('Saved ComEd daily data to ' + config.db + ' at ' + new Date());
-			});
+				// Save pricing data to new price document
+				var dataDate = new Date();
+				dataDate.setHours(0,0,0,0);
 
-		}, function(forwardError, realTimeError) {
-			if(forwardError) console.log(forwardError);
-			if(realTimeError) console.log(realTimeError);
-
-			// recursively call job if either HTTP request fails (disabled after 4 tries)
-			if(httpFails < 4) {
-				agenda.now('dailyPullComed');
-				httpFails++;
-			}
-		})
-		.then(function() {
-			done();
-		});
-	});
-
-	agenda.define('hourlyPullComEd', function(job, done){
-		// Pull real-time pricing data
-		getPricing('day', '20150414')
-		.then(function(payload) {
-			// reset http fail counter
-			httpFails = 0;
-
-			// Update pricing data on existing price document
-			var dataDate = new Date();
-			dataDate.setHours(0,0,0,0);
-
-			Price.findOne({ date: dataDate }, function(err, price) {
-				if(err) {
-					return console.log('Database error (hourly data): ' + errorHandler.getErrorMessage(err));
-				} else if(price === null) {
-					return console.log('Database error (hourly data): Daily data document not yet created, please do so before retreiving hourly data');
-				}
-
-				price.realTime = payload;
+				var price = new Price({
+					'utility': 'ComEd',
+					'date': dataDate,
+					'forward': forwardPayload,
+					'realTime': realTimePayload
+				});
 
 				price.save(function(err) {
 					if(err) {
-						return console.log('Database error (hourly data): ' + errorHandler.getErrorMessage(err));
+						return console.log('Database error (daily data): ' + errorHandler.getErrorMessage(err));
 					}
-					console.log('Saved ComEd hourly data to ' + config.db + ' at ' + new Date());					
+					console.log('Saved ComEd daily data to ' + config.db + ' at ' + new Date());
 				});
+
+			}, function(forwardError, realTimeError) {
+				if(forwardError) console.log(forwardError);
+				if(realTimeError) console.log(realTimeError);
+
+				// recursively call job if either HTTP request fails (disabled after 4 tries)
+				if(httpFails < 4) {
+					pullDailyData();
+					httpFails++;
+				} else {
+					console.log('4 consecutive HTTP failures, ceasing attempts');
+				}
+			})
+			.then(function() {
+				done();
 			});
+		}
+	});
 
-		}, function(reason) {
-			console.log(reason);
+	agenda.define('hourlyPullComEd', function(job, done){
+		
+		// initialize http fail counter
+		var httpFails = 0;
 
-			// recursively call job if HTTP request fails (disabled after 4 tries)
-			if(httpFails < 4) {
-				agenda.now('hourlyPullComEd');
-				httpFails++;
-			}
-		})
-		.then(function() {
-			done();
-		});
+		pullHourlyData();
+
+		function pullHourlyData() {
+			// Pull real-time pricing data
+			getPricing('day', '20150414')
+			.then(function(payload) {
+				// reset http fail counter
+				httpFails = 0;
+
+				// Update pricing data on existing price document
+				var dataDate = new Date();
+				dataDate.setHours(0,0,0,0);
+
+				Price.findOne({ date: dataDate }, function(err, price) {
+					if(err) {
+						return console.log('Database error (hourly data): ' + errorHandler.getErrorMessage(err));
+					} else if(price === null) {
+						return console.log('Database error (hourly data): Daily data document not yet created, please do so before retreiving hourly data');
+					}
+
+					price.realTime = payload;
+
+					price.save(function(err) {
+						if(err) {
+							return console.log('Database error (hourly data): ' + errorHandler.getErrorMessage(err));
+						}
+						console.log('Saved ComEd hourly data to ' + config.db + ' at ' + new Date());					
+					});
+				});
+
+			}, function(reason) {
+				console.log(reason);
+
+				// recursively call job if HTTP request fails (disabled after 4 tries)
+				if(httpFails < 4) {
+					pullHourlyData();
+					httpFails++;
+				} else {
+					console.log('4 consecutive HTTP failures, ceasing attempts');
+				}
+			})
+			.then(function() {
+				done();
+			});
+		}
 	});
 
 	// function to request and parse data from ComEd

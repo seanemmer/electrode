@@ -47,10 +47,8 @@ var VehicleSchema = new Schema({
 		required: true
 	},
 	primary: {
+		// TODO: Set validation for only one primary
 		type: Boolean,
-		// ensures only one document can be true at a time
-		unique: true,
-		sparse: true,
 		default: null
 	},
 	manufacturer: {
