@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 var config = require('../../config/config'),
+	moment = require('moment'),
 	request = require('request'),
 	Q = require('q'),
 	querystring = require('querystring'),
@@ -19,28 +20,29 @@ module.exports = function(agenda) {
 
 	agenda.define('dailyPullComEd', function(job, done){
 
-		// initialize http fail counter
-		var httpFails = 0;
+		// initialize vars
+		var httpFails = 0,
+			dataDate = moment().format('YYYYMMDD');
 
-		pullDailyData();
+		pullDailyData(dataDate);
 
-		function pullDailyData() {
+		function pullDailyData(date) {
 			// Unified promise to pull forward and real-time pricing data simultaneously
 			Q.all([
-				getPricing('daynexttoday', '20150414'),
-				getPricing('day', '20150414')
+				getPricing('daynexttoday', date),
+				getPricing('day', date)
 			])
 			.spread(function(forwardPayload, realTimePayload) {
 				// reset http fail counter
 				httpFails = 0;
 
 				// Save pricing data to new price document
-				var dataDate = new Date();
-				dataDate.setHours(0,0,0,0);
+				var lookupDate = new Date();
+				lookupDate.setHours(0,0,0,0);
 
 				var price = new Price({
 					'utility': 'ComEd',
-					'date': dataDate,
+					'date': lookupDate,
 					'forward': forwardPayload,
 					'realTime': realTimePayload
 				});
@@ -53,12 +55,12 @@ module.exports = function(agenda) {
 				});
 
 			}, function(forwardError, realTimeError) {
-				if(forwardError) console.log(forwardError);
-				if(realTimeError) console.log(realTimeError);
+				if(forwardError) console.log(errorHandler.getErrorMessage(forwardError));
+				if(realTimeError) console.log(errorHandler.getErrorMessage(realTimeError));
 
 				// recursively call job if either HTTP request fails (disabled after 4 tries)
 				if(httpFails < 4) {
-					pullDailyData();
+					pullDailyData(dataDate);
 					httpFails++;
 				} else {
 					console.log('4 consecutive HTTP failures, ceasing attempts');
@@ -72,23 +74,24 @@ module.exports = function(agenda) {
 
 	agenda.define('hourlyPullComEd', function(job, done){
 		
-		// initialize http fail counter
-		var httpFails = 0;
+		// initialize vars
+		var httpFails = 0,
+			dataDate = moment().format('YYYYMMDD');
 
-		pullHourlyData();
+		pullHourlyData(dataDate);
 
-		function pullHourlyData() {
+		function pullHourlyData(date) {
 			// Pull real-time pricing data
-			getPricing('day', '20150414')
+			getPricing('day', date)
 			.then(function(payload) {
 				// reset http fail counter
 				httpFails = 0;
 
 				// Update pricing data on existing price document
-				var dataDate = new Date();
-				dataDate.setHours(0,0,0,0);
+				var lookupDate = new Date();
+				lookupDate.setHours(0,0,0,0);
 
-				Price.findOne({ date: dataDate }, function(err, price) {
+				Price.findOne({ date: lookupDate }, function(err, price) {
 					if(err) {
 						return console.log('Database error (hourly data): ' + errorHandler.getErrorMessage(err));
 					} else if(price === null) {
@@ -105,12 +108,12 @@ module.exports = function(agenda) {
 					});
 				});
 
-			}, function(reason) {
-				console.log(reason);
+			}, function(err) {
+				console.log(errorHandler.getErrorMessage(err));
 
 				// recursively call job if HTTP request fails (disabled after 4 tries)
 				if(httpFails < 4) {
-					pullHourlyData();
+					pullHourlyData(dataDate);
 					httpFails++;
 				} else {
 					console.log('4 consecutive HTTP failures, ceasing attempts');

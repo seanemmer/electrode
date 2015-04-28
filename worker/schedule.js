@@ -19,7 +19,7 @@ agenda.mongo(jobs);
 
 agenda.purge(function(err, numRemoved) {});
 
-agenda.create('dailyPullComEd').schedule('11:01am').repeatEvery('5 minutes').save();
-agenda.create('hourlyPullComEd').schedule('11:02am').repeatEvery('1 minute').save();	
+agenda.create('dailyPullComEd').schedule('10:45am').repeatEvery('5 minutes').save();
+//agenda.create('hourlyPullComEd').schedule('11:42am').repeatEvery('1 minute').save();	
 
 module.exports = agenda;
