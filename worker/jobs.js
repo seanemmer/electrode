@@ -23,6 +23,9 @@ jobTypes.forEach(function(type)  {
 	require('./jobs/' + type + '.job')(agenda);
 });
 
+//agenda.now('dailyPullComEd');
+agenda.now('hourlyChargeQuery');
+
 if(jobTypes.length) {
 	agenda.start();
 }

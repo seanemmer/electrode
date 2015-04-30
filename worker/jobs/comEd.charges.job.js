@@ -19,14 +19,14 @@ module.exports = function(agenda) {
 
 	agenda.define('hourlyChargeSet', function(job, done){
 		
-		var availableTime = moment('17:00 -06:00', 'HH:mm Z').format(), // time that Chicago real time prices are available (5PM CT)
+		var availableTime = moment().utcOffset(-360).startOf('day').hour(17), // time that Chicago real time prices are available (5PM CT)
 			dayOfWeek = moment().format('d') - 1, // our convention is offset by 1 from ISO8601
 			hourOfDay = parseInt(moment().add(1, 'h').format('H')),
 			chargeParams = [],
 			vehicle = {
 				_id: job.attrs.data.id
 			},
-			pricesArray = job.attrs.data.prices,
+			priceMatrix = job.attrs.data.prices,
 			schedule = [],
 			teslaData = {};
 
@@ -40,7 +40,7 @@ module.exports = function(agenda) {
 			teslaData = {
 				charge_state: {
 					charging_state: 'plugged_in',
-					time_to_full_charge: 180,
+					time_to_full_charge: 720,
 					battery_level: 45
 				}
 			};			
@@ -65,35 +65,55 @@ module.exports = function(agenda) {
 
 			// Handle vehicles scheduled to charge today
 			if(todayBoolean) {
-				setChargeState(pricesArray, schedule[dayOfWeek].target, schedule[dayOfWeek].time);
+				console.log('today');
+				setChargeState(priceMatrix, schedule[dayOfWeek].target, schedule[dayOfWeek].time, false);
 			// Handle vehicles scheduled to charge tomorrow
 			} else if (tomorrowBoolean) {
-				setChargeState(pricesArray, schedule[dayOfWeek + 1].target, schedule[dayOfWeek + 1].time);
+				console.log('tomorrow');
+				setChargeState(priceMatrix, schedule[dayOfWeek + 1].target, schedule[dayOfWeek + 1].time, true);
 
 			}
 
-			function setChargeState(pricesArray, targetCharge, targetTime) {
-				var numArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
-					sortArray = [];
+			// function to set vehicle charge state
+			// 1) Prices matrix containing today and tomorrow's forward prices
+			// 2) Charge target specified by user
+			// 3) Completion time specified by user
+			// 4) 'dayAhead' boolean to indicate whether the completion time is after 12am today
+			function setChargeState(priceMatrix, targetCharge, targetTime, dayAhead) {
+				var numArray = [],
+					sortArray = [],
+					priceCount = 24 + 24*dayAhead;
+
+				// build array of prices based on quantity of data available
+				for(var i=0; i<priceCount;i++) {
+					numArray.push(i);
+				}
 
 				numArray.forEach(function(element, i) { 
-					sortArray[i] = {
-						hour: element,
-						price: pricesArray[0].forward[i]
-					};
+					if(i<24) {
+						sortArray[i] = {
+							hour: element,
+							price: priceMatrix[0].forward[i]
+						};
+					} else {
+						sortArray[i] = {
+							hour: element,
+							price: priceMatrix[1].forward[i-24]
+						};
+					}
 				});
 
 				sortArray = _.chain(sortArray)
-					.filter(function(element){ return element.hour >= hourOfDay; })
+					.filter(function(element){ return element.hour - 1 >= hourOfDay; })  // Subtract 1 to reflect that ComEd prices avg over previous hour
 					.sortBy(function(element){ return element.price; })
 					.value();
 
 				var currentHourRank = _.findIndex(sortArray, function(element) {
-					return element.hour === hourOfDay;
+					return element.hour - 1 === hourOfDay; // Subtract 1 to reflect that ComEd prices avg over previous hour
 				});
 
-					console.log(sortArray);
-					console.log(currentHourRank);
+				console.log(sortArray);
+				console.log(currentHourRank);
 
 				if(teslaData.charge_state.time_to_full_charge > currentHourRank*60) {
 					console.log('CHARGE ME UP SCOTTY!!');
@@ -109,7 +129,7 @@ module.exports = function(agenda) {
 
 	agenda.define('hourlyChargeQuery', function(job, done){
 
-		var availableTime = moment('17:00 -06:00', 'HH:mm Z').format(), // time that Chicago real time prices are available (5PM CT)
+		var availableTime = moment().utcOffset(-360).startOf('day').hour(17), // time that Chicago real time prices are available (5PM CT)
 			dayOfWeek = moment().format('d') - 1,  // our convention is offset by 1 from ISO8601
 			query = {},
 			prices = [];
@@ -132,10 +152,10 @@ module.exports = function(agenda) {
 
 			// Pull today and tomorrow's pricing from db
 			var todayLookupDate = new Date();
+			todayLookupDate.setDate(todayLookupDate.getDate() - 1);
 			todayLookupDate.setHours(0,0,0,0);
 
 			var tomorrowLookupDate = new Date();
-			tomorrowLookupDate.setDate(tomorrowLookupDate.getDate() + 1);
 			tomorrowLookupDate.setHours(0,0,0,0);
 
 			Q.all([
@@ -144,15 +164,14 @@ module.exports = function(agenda) {
 			])
 			.spread(function(todayPayload, tomorrowPayload) {
 				prices.push(todayPayload.toObject(), tomorrowPayload.toObject());
+
 				// Then execute vehicle query
 				return execVehicleQuery(query);
 			}, function(todayError, tomorrowError) {
 				var errorMessage;
 
 				// Handle different price retreival error scenarios
-				if(todayError && tomorrowError) {
-					errorMessage = errorHandler.getErrorMessage(todayError) + ' & ' + errorHandler.getErrorMessage(tomorrowError);
-				} else if(todayError) {
+				if(todayError) {
 					errorMessage = errorHandler.getErrorMessage(todayError);
 				} else if(tomorrowError) {
 					errorMessage = errorHandler.getErrorMessage(tomorrowError);
@@ -205,7 +224,7 @@ module.exports = function(agenda) {
 				if(err) {
 					deferred.reject(err);
 				} else if(price === null) {
-					deferred.reject(new Error('No price data available for ' + new Date()));
+					deferred.reject(new Error('No price data available for ' + date));
 				} else {
 					deferred.resolve(price);
 				}
@@ -230,9 +249,16 @@ module.exports = function(agenda) {
 			return deferred.promise;	
 		}
 
+		// function to initialize new charge in MongoDB
+		function initializeDbCharge() {
+
+		}
+
+		// function to terminate most recent charge in MongoDB
+		function terminateDbCharge() {
+
+		}
+
 		done();
 	});
-
-	agenda.now('hourlyChargeQuery');
-	agenda.start();
 };
