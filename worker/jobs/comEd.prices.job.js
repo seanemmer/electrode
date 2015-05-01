@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 var config = require('../../config/config'),
-	moment = require('moment'),
+	moment = require('moment-timezone'),
 	request = require('request'),
 	Q = require('q'),
 	querystring = require('querystring'),
@@ -16,13 +16,15 @@ var config = require('../../config/config'),
 
 module.exports = function(agenda) {
 
+	var timeZone = 'America/Chicago';
+
 	// Create agenda jobs
 
 	agenda.define('dailyPullComEd', function(job, done){
 
 		// initialize vars
 		var httpFails = 0,
-			dataDate = moment().format('YYYYMMDD');
+			dataDate = moment.tz(timeZone).format('YYYYMMDD');
 
 		pullDailyData(dataDate);
 
@@ -76,7 +78,7 @@ module.exports = function(agenda) {
 		
 		// initialize vars
 		var httpFails = 0,
-			dataDate = moment().format('YYYYMMDD');
+			dataDate = moment.tz(timeZone).format('YYYYMMDD');
 
 		pullHourlyData(dataDate);
 

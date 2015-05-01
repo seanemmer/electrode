@@ -64,15 +64,10 @@ var VehicleSchema = new Schema({
  		min: 0,
  		max: 120
 	},
-	pluggedIn: {
-		type: Boolean,
-		default: false,
-		required: true
-	},
-	charging: {
-		type: Boolean,
-		default: false,
-		required: true
+	currentCharge: {
+		type: Schema.ObjectId,
+		ref: 'Charge',
+		default: null,
 	},
 /*	// array to store velocity vector, which is re-computed daily
 	velocityVector: [Number],*/

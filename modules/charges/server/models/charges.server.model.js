@@ -21,9 +21,9 @@ var ChargeSchema = new Schema({
 	},
 	startTime: {
 		type: Date,
-		require: true
+		required: true
 	},
-	startState: {
+	startLevel: {
  		type: Number,
  		min: 0,
  		max: 100,
@@ -33,7 +33,7 @@ var ChargeSchema = new Schema({
 		type: Date,
 		default: null
 	},
-	endState: {
+	endLevel: {
  		type: Number,
  		min: 0,
  		max: 110,

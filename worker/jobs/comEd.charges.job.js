@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-var moment = require('moment'),
+var moment = require('moment-timezone'),
 	_ = require('lodash'),
 	path = require('path'),
 	errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
@@ -17,14 +17,16 @@ var moment = require('moment'),
 
 module.exports = function(agenda) {
 
+	var timeZone = 'America/Chicago';
+
 	agenda.define('hourlyChargeSet', function(job, done){
-		
-		var availableTime = moment().utcOffset(-360).startOf('day').hour(17), // time that Chicago real time prices are available (5PM CT)
-			dayOfWeek = moment().format('d') - 1, // our convention is offset by 1 from ISO8601
-			hourOfDay = parseInt(moment().add(1, 'h').format('H')),
+
+		var availableTime = moment.tz(timeZone).startOf('day').hour(17), // time that Chicago real time prices are available (5PM CT)
+			dayOfWeek = moment.tz(timeZone).format('d') - 1, // our convention is offset by 1 from ISO8601
+			hourOfDay = parseInt(moment.tz(timeZone).add(1, 'h').format('H')),
 			chargeParams = [],
 			vehicle = {
-				_id: job.attrs.data.id
+				_id: job.attrs.data.vehicleId
 			},
 			priceMatrix = job.attrs.data.prices,
 			schedule = [],
@@ -39,105 +41,209 @@ module.exports = function(agenda) {
 			// GET charge_state data from tesla (using dummy here)
 			teslaData = {
 				charge_state: {
-					charging_state: 'plugged_in',
+					charging_state: 'plugged_in', //unplugged
 					time_to_full_charge: 720,
 					battery_level: 45
 				}
 			};			
 		})
-		.then(function(payload) {
-			// Check if car is plugged in, if not terminate job
-			if(teslaData.charge_state.charging_state === 'unplugged') { 
-				done(); 
+		.then(function() {
+
+			// Check if car is plugged in, if not return (terminates job)
+			if(teslaData.charge_state.charging_state === 'unplugged') {
+				// terminate charge if currentCharge exists for vehicle
+				if(vehicle.currentCharge) {
+					terminateDbCharge(vehicle, teslaData.charge_state.battery_level);
+				}
+				console.log('Vehicle unplugged, terminating job; id = ' + vehicle._id);
 				return;
-			}
+			}			
 
 			// set today's charge if car is active today && time target is in the future && has less than today's target charge
 			var todayBoolean =  schedule[dayOfWeek].active && 
-								moment().isBefore(moment(schedule[dayOfWeek].time, 'hh:mmA')) &&
+								moment.tz(timeZone).isBefore(moment(schedule[dayOfWeek].time, 'hh:mmA')) &&
 							    teslaData.charge_state.battery_level < schedule[dayOfWeek].target;
 
 
 			// set tomorrow's charge if car is active tomorrow && has less than tomorrow's target charge && tomorrow's pricing data is available
 			var tomorrowBoolean = schedule[dayOfWeek+1].active && 
 								  teslaData.charge_state.battery_level < schedule[dayOfWeek + 1].target &&
-	  				 			  moment().isAfter(availableTime);
+	  				 			 moment.tz(timeZone).isAfter(availableTime);
 
 			// Handle vehicles scheduled to charge today
 			if(todayBoolean) {
 				console.log('today');
-				setChargeState(priceMatrix, schedule[dayOfWeek].target, schedule[dayOfWeek].time, false);
+				setChargeState(priceMatrix, vehicle, teslaData.charge_state.battery_level, teslaData.charge_state.time_to_full_charge, false);
 			// Handle vehicles scheduled to charge tomorrow
 			} else if (tomorrowBoolean) {
 				console.log('tomorrow');
-				setChargeState(priceMatrix, schedule[dayOfWeek + 1].target, schedule[dayOfWeek + 1].time, true);
-
+				setChargeState(priceMatrix, vehicle, teslaData.charge_state.battery_level, teslaData.charge_state.time_to_full_charge, true);
 			}
 
-			// function to set vehicle charge state
+			// function to set vehicle charge state, requires:
 			// 1) Prices matrix containing today and tomorrow's forward prices
-			// 2) Charge target specified by user
-			// 3) Completion time specified by user
-			// 4) 'dayAhead' boolean to indicate whether the completion time is after 12am today
-			function setChargeState(priceMatrix, targetCharge, targetTime, dayAhead) {
+			// 2) Vehicle object from MongoDB
+			// 3) Vehicle's current battery level
+			// 4) Vehicle's current time to full charge
+			// 5) 'dayAhead' boolean to indicate whether the completion time is after 12am today
+			function setChargeState(priceMatrix, vehicle, currentLevel, timeToFull, dayAhead) {
 				var numArray = [],
-					sortArray = [],
-					priceCount = 24 + 24*dayAhead;
+					priceSortArray = [],
+					priceCount,
+					targetLevel,
+					targetHour;
 
-				// build array of prices based on quantity of data available
-				for(var i=0; i<priceCount;i++) {
-					numArray.push(i);
+				// initialize variables on basis of dayAhead boolean
+				if(dayAhead) {
+					priceCount = 48;
+					targetLevel = parseInt(vehicle.schedule[dayOfWeek + 1].target);
+					targetHour = parseInt(moment.tz(vehicle.schedule[dayOfWeek + 1].time, 'hh:mmA', timeZone).format('H')) + 24;
+				} else {
+					priceCount = 24;
+					targetLevel = parseInt(vehicle.schedule[dayOfWeek].target);
+					targetHour = parseInt(moment.tz(vehicle.schedule[dayOfWeek].time, 'hh:mmA', timeZone).format('H'));
 				}
 
-				numArray.forEach(function(element, i) { 
-					if(i<24) {
-						sortArray[i] = {
-							hour: element,
-							price: priceMatrix[0].forward[i]
-						};
-					} else {
-						sortArray[i] = {
-							hour: element,
-							price: priceMatrix[1].forward[i-24]
-						};
-					}
-				});
+				var timeToTargetLevel = timeToFull * targetLevel / 100;
 
-				sortArray = _.chain(sortArray)
-					.filter(function(element){ return element.hour - 1 >= hourOfDay; })  // Subtract 1 to reflect that ComEd prices avg over previous hour
+				// Construct priceSortArray from price matrix, adjusting for fact that ComEd forward prices reflect previous hour
+				// whereas our algorithm is on the basis of the subsequent hour 
+				for(var i=0; i<priceCount; i++) {
+					var element;
+
+					//  today's prices
+					if(i<24) {
+						// for last hour of today, use either first hour of tomorrow or first hour of today (depending on availability)
+						if(i === 23) {
+							var lastHourPrice = dayAhead ? priceMatrix[1].forward[0] : priceMatrix[0].forward[0];
+							element = {
+								hour: i,
+								price: lastHourPrice
+							};
+						} else {
+							element = {
+								hour: i,
+								price: priceMatrix[0].forward[i+1]
+							};
+						}
+					// tomorrow's prices
+					} else {
+						// for last hour of tomorrow, use first hour of tomorrow
+						if(i === 47) {
+							element = {
+								hour: i,
+								price: priceMatrix[1].forward[0]
+							};
+						} else {
+							element = {
+								hour: i,
+								price: priceMatrix[1].forward[i-24+1]
+							};
+						}
+					}
+					
+					priceSortArray.push(element);
+				}
+
+				// Transform priceSortArray: Filter out dates in the past and dates after the completion target, then sort by price DESC
+				priceSortArray = _.chain(priceSortArray)
+					.filter(function(element){ return element.hour < targetHour && element.hour >= hourOfDay; })  
 					.sortBy(function(element){ return element.price; })
 					.value();
 
-				var currentHourRank = _.findIndex(sortArray, function(element) {
-					return element.hour - 1 === hourOfDay; // Subtract 1 to reflect that ComEd prices avg over previous hour
+				// Determine current hour's ranking in transformed priceSortArray
+				var currentHourRank = _.findIndex(priceSortArray, function(element) {
+					return element.hour < targetHour && element.hour === hourOfDay;
 				});
 
-				console.log(sortArray);
-				console.log(currentHourRank);
-
-				if(teslaData.charge_state.time_to_full_charge > currentHourRank*60) {
-					console.log('CHARGE ME UP SCOTTY!!');
-				}
+				if(timeToTargetLevel > currentHourRank*60) {
+					if(vehicle.currentCharge === null) {
+						initializeDbCharge(vehicle, currentLevel, dayAhead);
+					} else {
+						console.log('Charge continued for ' + vehicle._id + ' at ' + new Date() );
+					}
+				} else {
+					terminateDbCharge(vehicle, currentLevel);
+				}				
 			}
-
-			done();
-		}, function(err) {
-			console.log(err);
+		})
+		.then(null, function(err) {
+			// error handler for entire promise chain (mpromise convention)
+			console.log('Process error (hourly charge): ' + errorHandler.getErrorMessage(err));
+		})
+		.then(function() {
 			done();
 		});
+
+		// function to initialize new charge in MongoDB, requires:
+		// 1) Vehicle object from MongoDB
+		// 2) Current vehicle battery level
+		// 3) 'dayAhead' boolean to indicate whether the completion time is after 12am today
+		function initializeDbCharge(vehicle, currentLevel, dayAhead) {
+			var charge = new Charge ({
+				vehicle: vehicle._id,
+				startTime: new Date(),
+				startLevel: currentLevel,
+				scheduleDay: vehicle.schedule[dayOfWeek + 1*dayAhead].day,
+				scheduleTime: vehicle.schedule[dayOfWeek + 1*dayAhead].time,
+				scheduleTarget: vehicle.schedule[dayOfWeek + 1*dayAhead].target,
+			});
+
+			charge.save(function(err) {
+				if(err) {
+					throw err;
+				}
+
+				vehicle.currentCharge = charge._id;
+				vehicle.save(function(err) {
+					if(err) {
+						throw err;
+					}
+					console.log('Charge initialized for ' + vehicle._id + ' at ' + new Date());
+				});
+			});
+		}
+
+		// function to terminate most recent charge in MongoDB
+		// 1) Vehicle object from MongoDB
+		function terminateDbCharge(vehicle, currentLevel) {
+			Charge.findOne({ vehicle: vehicle._id, endTime: null, endLevel: null }, function(err, charge) {
+				if(err) {
+					throw err;
+				} else if(charge) {
+					charge.endTime = new Date();
+					charge.endLevel = currentLevel;
+
+					charge.save(function(err) {
+						if(err) {
+							throw err;
+						}
+						vehicle.currentCharge = null;
+						vehicle.save(function(err) {
+							if(err) {
+								throw err;
+							}
+							console.log('Charge terminated for ' + vehicle._id + ' at ' + new Date());
+						});						
+					});
+				} else {
+					console.log('Note: Charge termination unnecessary, no open charges.');
+				}
+			});
+		}
 	});
 
 	agenda.define('hourlyChargeQuery', function(job, done){
 
-		var availableTime = moment().utcOffset(-360).startOf('day').hour(17), // time that Chicago real time prices are available (5PM CT)
-			dayOfWeek = moment().format('d') - 1,  // our convention is offset by 1 from ISO8601
+		var availableTime = moment.tz(timeZone).startOf('day').hour(17), // time that Chicago real time prices are available (5PM CT)
+			dayOfWeek = moment.tz(timeZone).format('d') - 1,  // app convention is offset by 1 from ISO8601
 			query = {},
 			prices = [];
 
 		// Pull price data from database, query vehicles that are candidates for charging, schedule charge jobs immediately
 		
 		// fork based on price availability
-		if(moment().isAfter(availableTime)) {
+		if(moment.tz(timeZone).isAfter(availableTime)) {
 
 			// Construct query for vehicles active today and tomorrow
 			var queryA = {};
@@ -181,11 +287,11 @@ module.exports = function(agenda) {
 			// And immediately schedule charge jobs
 			.then(function(payload) {
 				payload.forEach(function(element) {
-					agenda.now('hourlyChargeSet', { id: element._id, schedule: element.schedule.toObject(), prices: prices } );
+					agenda.now('hourlyChargeSet', { vehicleId: element._id, schedule: element.schedule.toObject(), prices: prices } );
 				});
 			})
 			.fail(function(err) {
-				console.log('Database error (hourly charge): ' + errorHandler.getErrorMessage(err));
+				console.log('Database error (hourly charge query): ' + errorHandler.getErrorMessage(err));
 			});
 
 		} else {
@@ -206,11 +312,11 @@ module.exports = function(agenda) {
 			// And immediately schedule charge jobs
 			.then(function(payload) {
 				payload.forEach(function(element) {
-					agenda.now('hourlyChargeSet', { id: element._id, schedule: element.schedule.toObject(), prices: prices } );
+					agenda.now('hourlyChargeSet', { vehicleId: element._id, schedule: element.schedule.toObject(), prices: prices } );
 				});
 			})
 			.fail(function(err) {
-				console.log('Database error (hourly charge): ' + errorHandler.getErrorMessage(err));
+				console.log('Database error (hourly charge query): ' + errorHandler.getErrorMessage(err));
 			});
 
 		}
@@ -247,16 +353,6 @@ module.exports = function(agenda) {
 			});		
 
 			return deferred.promise;	
-		}
-
-		// function to initialize new charge in MongoDB
-		function initializeDbCharge() {
-
-		}
-
-		// function to terminate most recent charge in MongoDB
-		function terminateDbCharge() {
-
 		}
 
 		done();
