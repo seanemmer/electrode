@@ -6,7 +6,7 @@
 				<h2>Register for Electrode</h2>
 				<h4 class="unbold">requires valid Tesla account</h4>
 				<form ng-submit="dialogRegister()" novalidate class="register-form">
-					<div layout="row" layout-align="space-around">
+					<div layout-sm="column" layout-gt-sm="row" layout-align-sm="center center" layout-align-gt-sm="space-around">
 						<md-input-container>
 						  <label>First Name</label>
 						  <input type="text" ng-model="credentials.firstName">
@@ -16,7 +16,7 @@
 						  <input type="text" ng-model="credentials.lastName">
 						</md-input-container>
 					</div>
-					<div layout="row" layout-align="space-around">
+					<div layout-sm="column" layout-gt-sm="row" layout-align-sm="center center" layout-align-gt-sm="space-around">
 						<md-input-container>
 						  <label>Email Address</label>
 						  <input type="text" ng-model="credentials.email">

@@ -1,13 +1,18 @@
 <section>
 	<div layout="column" layout-align="center center">
 		<div layout="column" class="hero-main md-primary">
-			<h1>5 Minutes for a Better Future</h1>
+			<h1>Help Create a Better Future</h1>
 			<span>
-				That's all it takes to optimize your charge schedule and minimize your grid footprint
+				Optimize your EV charge schedule - in just 5 minutes!
 			</span>
 			<p>
-				Every night thousands of electric vehicle drivers plug in when they get home.  Without a proper planning schedule, they could be subject to price spikes of up to 500%!  We've built a tool that helps you avoid those nasty spikes and reduce the environmental impact of your vehicle :)
+				Electrode is a tool designed to maximize the energy efficiency and environmental impact of your electric vehicle.  Our smart-charging algorithm uses real-time electricity pricing to charge your vehicle overnight when prices are lowest.  The system is fully integrated with your  vehicle, managing the charge cycle and ensuring that your car is charged and ready when you need it.  
 			</p>
+			<div class="hero-buttons" layout-gt-sm="row" layout-sm="column" layout-align="center">
+				<md-button ng-click="getStarted($event)" class="md-raised md-primary">Get Started</md-button>
+				&nbsp&nbsp&nbsp
+				<md-button ng-show="!authentication.user" ng-click="homeSignIn($event)" class="md-raised">Sign In</md-button>
+			</div>
 		</div>
 	</div>
 </section>

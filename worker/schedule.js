@@ -2,7 +2,8 @@
 
 var agenda = require('agenda')(),
 	mongoose = require('mongoose'),
-	jobs = mongoose.connection.collection('jobs');
+	jobs = mongoose.connection.collection('jobs'),
+	moment = require('moment');
 
 // Connect to job queue
 
@@ -19,8 +20,20 @@ agenda.mongo(jobs);
 
 agenda.purge(function(err, numRemoved) {});
 
-agenda.create('dailyPullComEd').schedule('5:54pm').repeatEvery('1 day').save();
-agenda.create('hourlyPullComEd').schedule('4:55pm').repeatEvery('1 hour').save();
-agenda.create('hourlyChargeQuery').schedule('4:56pm').repeatEvery('1 hour').save();		
+var sixTill,
+	fiveTill;
+
+if(moment().minute() < 53) {
+	sixTill = moment().endOf('hour').subtract(5, 'm').format('H:mmA');
+	fiveTill = moment().endOf('hour').subtract(4, 'm').format('H:mmA');	
+} else {
+	console.log('b');
+	sixTill = moment().endOf('hour').add(1, 'h').subtract(5, 'm').format('H:mmA');
+	fiveTill = moment().endOf('hour').add(1, 'h').subtract(4, 'm').format('H:mmA');	
+}
+
+agenda.create('dailyPullComEd').schedule('5:53pm').repeatEvery('1 day').save();
+agenda.create('hourlyPullComEd').schedule(sixTill).repeatEvery('1 hour').save();
+agenda.create('hourlyChargeQuery').schedule(fiveTill).repeatEvery('1 hour').save();		
 
 module.exports = agenda;

@@ -3,7 +3,7 @@
    <ng-md-icon icon="battery_charging_full" style="fill:white; margin-top: 4px;"></ng-md-icon><a ui-sref="home">ELECTRODE</a>
     <!-- fill up the space between left and right area -->
     <span flex></span>
-    <div ng-show="!authentication.user">
+    <div ng-show="!authentication.user" class="authentication-buttons">
       <md-button ng-click="register($event)">
         Register
       </md-button>

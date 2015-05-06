@@ -42,7 +42,7 @@ module.exports = function(agenda) {
 			teslaData = {
 				charge_state: {
 					charging_state: 'plugged_in', //unplugged
-					time_to_full_charge: 720,
+					time_to_full_charge: 181,
 					battery_level: 45
 				}
 			};			

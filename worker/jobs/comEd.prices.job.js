@@ -24,7 +24,7 @@ module.exports = function(agenda) {
 
 		// initialize vars
 		var httpFails = 0,
-			dataDate = moment.tz(timeZone).format('YYYYMMDD');
+			dataDate = moment.tz(timeZone).add(1,'d').format('YYYYMMDD');
 
 		pullDailyData(dataDate);
 
@@ -39,7 +39,8 @@ module.exports = function(agenda) {
 				httpFails = 0;
 
 				// Save pricing data to new price document
-				var lookupDate = new Date();
+				var lookupDate = moment.tz(timeZone).toDate();
+				lookupDate.setDate(lookupDate.getDate() + 1);
 				lookupDate.setHours(0,0,0,0);
 
 				var price = new Price({
@@ -90,7 +91,7 @@ module.exports = function(agenda) {
 				httpFails = 0;
 
 				// Update pricing data on existing price document
-				var lookupDate = new Date();
+				var lookupDate = moment.tz(timeZone).toDate();
 				lookupDate.setHours(0,0,0,0);
 
 				Price.findOne({ date: lookupDate }, function(err, price) {
@@ -143,7 +144,7 @@ module.exports = function(agenda) {
 
 		request(requestURL, function(error, response, body) {
 			if (error || response.statusCode !== 200) {	
-				deferred.reject(new Error('Unable to retreive data from utility'));
+				deferred.reject(new Error('Unable to retreive data from utility at' + new Date()));
 
 			} else {			
 				

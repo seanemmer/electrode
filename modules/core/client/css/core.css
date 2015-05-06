@@ -43,19 +43,28 @@ md-select {
   margin-top: 12px;
   margin-bottom: 12px; }
 
+@media (max-width: 600px) {
+  .content {
+    margin-left: 20px;
+    margin-right: 20px; }
+  h1 {
+    font-size: 1.6em; } }
+
 /* APP SPECIFIC */
 .hero-main {
-  margin-top: 60px;
+  margin-top: 36px;
   margin-right: 40px;
   margin-left: 40px;
   max-width: 800px; }
   .hero-main h1 {
     font-size: 3.2em;
-    margin-bottom: 20px; }
+    margin-bottom: 18px; }
   .hero-main span {
     font-size: 1.6em;
     color: #616161;
     color: rgba(0, 0, 0, 0.54); }
+  .hero-main p {
+    margin-bottom: 0; }
   .hero-main .hero-buttons {
     margin-top: 40px; }
     .hero-main .hero-buttons button {
@@ -63,15 +72,36 @@ md-select {
     .hero-main .hero-buttons span {
       font-size: 18px; }
 
+@media (max-width: 600px) {
+  .hero-main {
+    margin-top: 0;
+    margin-right: 0px;
+    margin-left: 0px;
+    text-align: center; }
+    .hero-main h1 {
+      font-size: 2.2em; }
+    .hero-main span {
+      font-size: 1.2em; }
+    .hero-main .hero-buttons {
+      margin-top: 28px;
+      margin-bottom: 48px; } }
+
 .pink {
   background-color: #ec407a !important; }
 
 md-toast {
   background-color: #ec407a !important; }
 
+/* HEADER */
+@media (max-width: 600px) {
+  .authentication-buttons {
+    font-size: 4px; } }
+
 /* STANDARD DIALOG */
 .standard-dialog {
   width: 600px; }
+  .standard-dialog h2 {
+    text-align: center; }
   .standard-dialog md-content {
     margin-top: 12px;
     padding-bottom: 0; }
@@ -82,6 +112,11 @@ md-toast {
     margin-top: 16px;
     margin-bottom: 0;
     color: #f44336; }
+
+@media (max-width: 600px) {
+  .dialog-form-error {
+    font-size: 14px;
+    line-height: 18px; } }
 
 /* History Page */
 .history-filter {

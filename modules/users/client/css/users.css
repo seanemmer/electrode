@@ -11,6 +11,18 @@
   width: 260px;
   padding: 12px 14px; }
 
+@media (max-width: 600px) {
+  .register-dialog .sticky-container {
+    padding-top: 0px; }
+  .register-dialog form {
+    margin-top: 0 !important; }
+  .register-dialog md-content {
+    height: 344px; }
+  .register-dialog md-input-container {
+    padding-top: 0px;
+    padding-bottom: 2px;
+    width: 115%; } }
+
 /* Sign In Dialog */
 .sign-in-dialog h4 {
   margin-top: 4px;
@@ -23,3 +35,11 @@
 .sign-in-dialog md-input-container {
   width: 260px;
   padding: 12px 14px; }
+
+@media (max-width: 600px) {
+  .sign-in-dialog md-content {
+    height: 240px; }
+  .sign-in-dialog md-input-container {
+    padding-top: 0px;
+    padding-bottom: 2px;
+    width: 115%; } }
