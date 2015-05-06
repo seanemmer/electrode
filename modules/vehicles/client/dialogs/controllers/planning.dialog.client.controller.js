@@ -1,8 +1,15 @@
 'use strict';
 
-angular.module('vehicles').controller('PlanningDialogCtrl', ['currentData', '$scope', '$mdDialog',
-	function(currentData, $scope, $mdDialog) {
-		
+angular.module('vehicles').controller('PlanningDialogCtrl', ['$window', 'currentData', '$scope', '$mdDialog',
+	function($window, currentData, $scope, $mdDialog) {
+
+		if($window.innerWidth <=600) {
+			$scope.mobileDevice = true;
+			$scope.targetOpts = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100];
+		} else {
+			$scope.mobileDevice = false;
+		}
+
 		$scope.day = currentData.day;
 
 		var time = currentData.time;

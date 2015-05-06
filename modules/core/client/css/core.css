@@ -10,11 +10,23 @@
  *                                          '200', 'a100')
  */
 /* GENERAL */
+header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 79; }
+
+md-toast {
+  position: fixed; }
+
 .unbold {
   font-weight: normal; }
 
+.center {
+  text-align: center; }
+
 .content {
-  margin-top: 50px; }
+  padding-top: 136px; }
 
 .text-center {
   text-align: center; }
@@ -72,18 +84,21 @@ md-select {
     .hero-main .hero-buttons span {
       font-size: 18px; }
 
+.md-paginator md-icon {
+  color: #f4ff81 !important; }
+
 @media (max-width: 600px) {
   .hero-main {
-    margin-top: 0;
-    margin-right: 0px;
-    margin-left: 0px;
+    margin-top: 24px;
+    margin-right: 0;
+    margin-left: 0;
     text-align: center; }
     .hero-main h1 {
       font-size: 2.2em; }
     .hero-main span {
       font-size: 1.2em; }
     .hero-main .hero-buttons {
-      margin-top: 28px;
+      margin-top: 22px;
       margin-bottom: 48px; } }
 
 .pink {
@@ -94,8 +109,15 @@ md-toast {
 
 /* HEADER */
 @media (max-width: 600px) {
-  .authentication-buttons {
-    font-size: 4px; } }
+  .md-toolbar-tools a {
+    font-size: 16px; }
+  .md-toolbar-tools .authentication-buttons {
+    padding-bottom: 3px; }
+    .md-toolbar-tools .authentication-buttons * {
+      font-size: 14px;
+      padding: 3px; }
+    .md-toolbar-tools .authentication-buttons span {
+      padding: 0; } }
 
 /* STANDARD DIALOG */
 .standard-dialog {
@@ -119,19 +141,18 @@ md-toast {
     line-height: 18px; } }
 
 /* History Page */
+.history-toolbar-header {
+  margin-top: 12px;
+  background-color: #4dd0e1 !important;
+  min-height: 36px; }
+
 .history-filter {
   width: 100%;
   padding: 0 20px; }
 
-.history-toolbar-header {
-  margin-top: 12px;
-  background-color: #4dd0e1 !important;
-  min-height: 48px;
-  height: 48px; }
-
 .history-list {
   list-style-type: none;
-  margin-top: 12px;
+  margin-top: 8px;
   padding: 0;
   width: 100%; }
   .history-list .history-list-entry {
@@ -140,4 +161,17 @@ md-toast {
     .history-list .history-list-entry .history-list-entry-target-container {
       width: 48px; }
   .history-list .history-list-entry:hover {
-    background-color: #f0f4c3; }
+    background-color: #f4ff81; }
+
+@media (min-width: 601px) {
+  .history-toolbar-header {
+    height: 48px; } }
+
+@media (max-width: 600px) {
+  .history-toolbar-header {
+    font-size: 16px;
+    height: 36px; }
+  .history-filter {
+    font-size: 14px; }
+  .history-list-entry {
+    font-size: 12px; } }

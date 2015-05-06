@@ -13,35 +13,18 @@ angular.module('core').controller('HeaderCtrl', ['$mdToast', '$location', '$http
 					$scope.tabIndex = 0;
 					break;
 				case 'planning':
-					$scope.tabIndex = 0;
-					break;
-				case 'history':
 					$scope.tabIndex = 1;
 					break;
-				case 'prices':
+				case 'history':
 					$scope.tabIndex = 2;
+					break;
+				case 'prices':
+					$scope.tabIndex = Authentication.user ? 3 : 1;
 					break;
 				default: 
 					$scope.tabIndex = 0;
 			}
 		});
-
-		$scope.tabs = [
-			{
-				'name': 'Charge Planning',
-				'state': 'planning',
-				'authenticationRequired': true
-			},
-			{
-				'name': 'Vehicle History',
-				'state': 'history',
-				'authenticationRequired': true
-			},
-			{
-				'name': 'Electricity Pricing',
-				'state': 'prices',
-			}
-		];
 
 		$scope.register = function(event) {
 			$mdDialog.show({

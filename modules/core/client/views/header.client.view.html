@@ -1,6 +1,7 @@
 <md-toolbar data-ng-controller="HeaderCtrl">
   <div class="md-toolbar-tools">
-   <ng-md-icon icon="battery_charging_full" style="fill:white; margin-top: 4px;"></ng-md-icon><a ui-sref="home">ELECTRODE</a>
+   <ng-md-icon icon="battery_charging_full" style="fill:white; margin-top: 4px;"></ng-md-icon>
+   <a ui-sref="home">ELECTRODE</a>
     <!-- fill up the space between left and right area -->
     <span flex></span>
     <div ng-show="!authentication.user" class="authentication-buttons">
@@ -12,18 +13,20 @@
         Sign In
       </md-button>
     </div>
-    <div ng-show="authentication.user">
+    <div ng-show="authentication.user" class="authentication-buttons">
       <md-button ng-click="signOut($event)">
         Sign Out
       </md-button>
     </div>
   </div>
   <!-- Show when no User present -->
-  <md-tabs class="md-primary" md-selected="tabIndex" ng-show="!authentication.user">
+  <md-tabs md-center-tabs="true" class="md-primary" md-selected="tabIndex" ng-show="!authentication.user">
+    <md-tab ui-sref="home" label="Home"></md-tab>
     <md-tab ui-sref="prices" label="Electricity Prices"></md-tab>
   </md-tabs>
   <!-- Show when User present -->
-  <md-tabs class="md-primary" md-selected="tabIndex" ng-show="authentication.user">
+  <md-tabs md-center-tabs="true" class="md-primary" md-selected="tabIndex" ng-show="authentication.user">
+    <md-tab ui-sref="home" label="Home"></md-tab>
     <md-tab ui-sref="planning" label="Charge Planning"></md-tab>
     <md-tab ui-sref="history" label="Vehicle History"></md-tab>
     <md-tab ui-sref="prices" label="Electricity Prices"></md-tab>

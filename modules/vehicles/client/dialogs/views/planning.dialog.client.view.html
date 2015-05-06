@@ -16,10 +16,15 @@
 					</md-select>
 				</div>
 			</div>
-			<div layout="column" layout-align="center center" class="charge-target-slider-container">
-				<h2>Charge Target</h2>
+			<h2>Charge Target</h2>
+			<div ng-show="!mobileDevice" layout="column" layout-align="center center" class="charge-target-slider">
 				<md-slider class="md-primary" ng-model="target" min="0" max="100" aria-label="new-charge-target"></md-slider>
 				<h2>{{target}}%</h3>
+			</div>
+			<div ng-show="mobileDevice" layout="column" layout-align="center center" class="charge-target-selector">
+				<md-select ng-model="target">
+				  <md-option ng-value="opt" ng-repeat="opt in targetOpts">{{ opt }}%</md-option>
+				</md-select>
 			</div>
 		</div>
 	</md-content>

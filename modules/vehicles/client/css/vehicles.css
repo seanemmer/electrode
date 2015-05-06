@@ -14,8 +14,7 @@
   margin-top: 40px; }
 
 .charge-circle-container {
-  width: 130px;
-  height: 220px; }
+  width: 130px; }
 
 .charge-circle-day {
   text-align: center; }
@@ -46,27 +45,51 @@
       width: 50px;
       height: 2px;
       border: 0;
-      background-color: #d4e157; }
+      background-color: #f4ff81; }
     .charge-circle .charge-circle-label p {
       margin-top: -2px;
       margin-bottom: 0;
       font-size: 14px; }
 
-.charge-circle:hover {
-  box-shadow: 0 8px 17px rgba(0, 0, 0, 0.2); }
-  .charge-circle:hover .charge-circle-edit-label {
-    color: #ec407a; }
-
 .charge-circle-edit-label {
-  color: white;
   font-size: 14px;
   margin-bottom: 7px;
   transition: 0.2s linear all; }
 
 .planning-save {
   color: white !important;
-  margin-top: 20px;
   padding: 8px 40px; }
+
+@media (min-width: 601px) {
+  .charge-circle-edit-label {
+    color: white; }
+  .charge-circle:hover {
+    box-shadow: 0 8px 17px rgba(0, 0, 0, 0.2); }
+    .charge-circle:hover .charge-circle-edit-label {
+      color: #ec407a; }
+  .planning-save-default-container {
+    margin-top: 20px; } }
+
+@media (max-width: 600px) {
+  .charge-circle-array {
+    margin-bottom: 45px; }
+  .charge-circle-edit-label {
+    color: #ec407a; }
+  .charge-circle-divider {
+    background-color: #616161;
+    background-color: rgba(0, 0, 0, 0.54);
+    border: none;
+    height: 2px;
+    width: 100px; }
+  .planning-save-mobile-container {
+    width: 100%;
+    background-color: white;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    z-index: 78; } }
 
 /* Planning Dialog */
 .planning-dialog md-content {
@@ -79,7 +102,10 @@
   color: #00bcd4; }
   .planning-dialog .charge-time-selector md-select {
     margin-bottom: 24px; }
-.planning-dialog .charge-target-slider-container md-slider {
+.planning-dialog .charge-target-selector {
+  font-size: 24px;
+  color: #00bcd4; }
+.planning-dialog .charge-target-slider md-slider {
   width: 500px; }
-.planning-dialog .charge-target-slider-container h2:nth-child(3) {
+.planning-dialog .charge-target-slider h2:nth-child(2) {
   color: #00bcd4; }

@@ -1,11 +1,20 @@
 'use strict';
 
-angular.module('vehicles').controller('PlanningCtrl', ['$mdToast', 'Vehicles', 'Users', 'Authentication', '$timeout', '$scope', '$mdDialog',
-	function($mdToast, Vehicles, Users, Authentication, $timeout, $scope, $mdDialog) {
+angular.module('vehicles').controller('PlanningCtrl', ['$window', '$mdToast', 'Vehicles', 'Users', 'Authentication', '$timeout', '$scope', '$mdDialog',
+	function($window, $mdToast, Vehicles, Users, Authentication, $timeout, $scope, $mdDialog) {
 		$scope.authentication = Authentication;
 		$scope.currentVehicle = _.find(Authentication.user.vehicles, function(vehicle) {
 			return vehicle.primary === true;
 		});
+
+		// Expose mobile device boolean and set label text
+		if($window.innerWidth <=600) {
+			$scope.mobileDevice = true;
+			$scope.deviceInput = 'tap';
+		} else {
+			$scope.mobileDevice = false;
+			$scope.deviceInput = 'click';
+		}
 
 		var initialSchedule = angular.copy($scope.currentVehicle.schedule);
 		$scope.saveButtonText = initialSchedule.length === 0 ? 'Establish Schedule!' : 'Save Changes';

@@ -13,13 +13,13 @@
 
 @media (max-width: 600px) {
   .register-dialog .sticky-container {
-    padding-top: 0px; }
+    padding-top: 0; }
   .register-dialog form {
     margin-top: 0 !important; }
   .register-dialog md-content {
     height: 344px; }
   .register-dialog md-input-container {
-    padding-top: 0px;
+    padding-top: 0;
     padding-bottom: 2px;
     width: 115%; } }
 
@@ -38,8 +38,8 @@
 
 @media (max-width: 600px) {
   .sign-in-dialog md-content {
-    height: 240px; }
+    height: 344px; }
   .sign-in-dialog md-input-container {
-    padding-top: 0px;
+    padding-top: 0;
     padding-bottom: 2px;
     width: 115%; } }

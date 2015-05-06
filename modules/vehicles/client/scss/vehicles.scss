@@ -9,7 +9,6 @@
 
 .charge-circle-container {
 	width: 130px;
-	height: 220px;
 }
 
 .charge-circle-day {
@@ -53,7 +52,7 @@
 			width: 50px;
 			height: 2px;
 			border: 0;
-			background-color: material-color('lime', '400');
+			background-color: material-color('lime', 'a100');
 		}
 
 		p {
@@ -64,16 +63,7 @@
 	}
 }
 
-.charge-circle:hover {
-	box-shadow: 0 8px 17px rgba(0, 0, 0, 0.2);
-
-	.charge-circle-edit-label{
-		color: material-color('pink', '400');
-	}
-}
-
 .charge-circle-edit-label {
-	color: white;
 	font-size: 14px;
 	margin-bottom: 7px;
 	transition: 0.2s linear all;
@@ -81,9 +71,56 @@
 
 .planning-save {
 	color: white !important;
-	margin-top: 20px;
 	padding: 8px 40px;
 }
+
+@media (min-width: 601px) {
+	.charge-circle-edit-label {
+		color: white;
+	}
+
+	.charge-circle:hover {
+		box-shadow: 0 8px 17px rgba(0, 0, 0, 0.2);
+
+		.charge-circle-edit-label{
+			color: material-color('pink', '400');
+		}
+	}
+
+	.planning-save-default-container{
+		margin-top: 20px;
+	}
+}
+
+@media (max-width: 600px) {
+	.charge-circle-array {
+		margin-bottom: 45px;
+	}
+
+	.charge-circle-edit-label {
+		color: material-color('pink', '400');
+	}
+
+	.charge-circle-divider {
+		background-color: #616161;
+		background-color: rgba(0,0,0,0.54);	
+		border: none;
+		height: 2px;
+		width: 100px;
+	}
+
+	.planning-save-mobile-container {
+		width: 100%;
+		background-color: white;
+		position: fixed;
+		left: 0;
+		bottom: 0;
+		padding-top: 10px;
+		padding-bottom: 5px;
+		z-index: 78
+	}
+}
+
 
 /* Planning Dialog */
 
@@ -107,12 +144,17 @@
 		}
 	}
 
-	.charge-target-slider-container {
+	.charge-target-selector {
+		font-size: 24px;
+		color: material-color('cyan', '500');
+	}
+
+	.charge-target-slider {
 		md-slider {
 			width: 500px;
 		}
 
-		h2:nth-child(3) {
+		h2:nth-child(2) {
 			color:material-color('cyan', '500');
 		}
 	}

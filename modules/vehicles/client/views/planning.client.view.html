@@ -1,8 +1,8 @@
-<section >
+<section>
 	<div layout="column" layout-align="center center">
-		<h1>Overnight Charging Schedule</h1>
+		<h1 class="center">Overnight Charging Schedule</h1>
 		<h2 class="unbold light-gray subheader">{{currentVehicle.manufacturer}} {{currentVehicle.model}}</h2>
-		<div layout="row" layout-align="center" class="charge-circle-array">
+		<div layout-sm="column" layout-gt-sm="row" layout-align="center" class="charge-circle-array">
 			
 			<div ng-repeat="setting in chargeSettings" layout="column" layout-align="top" class="charge-circle-container">
 				<div layout="column" layout-align="center center" class="charge-circle-day">
@@ -17,11 +17,17 @@
 						<p>{{setting.target}}%</p>
 					</div>
 					<md-progress-circular md-mode="determinate" ng-value="setting.target" md-diameter="100"></md-progress-circular>
-					<span class="charge-circle-edit-label">click to edit</span>
+					<span class="charge-circle-edit-label">{{deviceInput}} to edit</span>
 				</div>
+				<hr ng-if="mobileDevice && $index < 6" class="charge-circle-divider">
 			</div>
 
 		</div>
-		<md-button ng-show="scheduleDirty" ng-click="updateSchedule()" class="md-raised pink planning-save">{{saveButtonText}}</md-button>
+		<div ng-if="!mobileDevice" ng-show="scheduleDirty" class="planning-save-default-container">
+			<md-button ng-click="updateSchedule()" class="md-raised pink planning-save">{{saveButtonText}}</md-button>
+		</div>
+		<div ng-if="mobileDevice" ng-show="scheduleDirty" layout="row" layout-align="center" class="planning-save-mobile-container">
+			<md-button ng-click="updateSchedule()" class="md-raised pink planning-save">{{saveButtonText}}</md-button>
+		</div>
 	</div>
 </section>
