@@ -8,8 +8,8 @@ module.exports = {
 				'public/lib/angular-chart.js/dist/angular-chart.css'
 			],
 			js: [
-				'public/lib/jquery/dist/jquery.js',
 				'public/lib/angular/angular.js',
+				'public/lib/jquery/dist/jquery.js',
 				'public/lib/angular-resource/angular-resource.js',
 				'public/lib/angular-animate/angular-animate.js',
 				'public/lib/angular-ui-router/release/angular-ui-router.js',
