@@ -3,9 +3,13 @@
 angular.module('vehicles').controller('PlanningCtrl', ['$window', '$mdToast', 'Vehicles', 'Users', 'Authentication', '$timeout', '$scope', '$mdDialog',
 	function($window, $mdToast, Vehicles, Users, Authentication, $timeout, $scope, $mdDialog) {
 		$scope.authentication = Authentication;
+		console.log('authentication');
+		console.log(Authentication);
 		$scope.currentVehicle = _.find(Authentication.user.vehicles, function(vehicle) {
 			return vehicle.primary === true;
 		});
+		console.log('currentVehicle');
+		console.log($scope.currentVehicle);
 
 		// Expose mobile device boolean and set label text
 		if($window.innerWidth <=600) {
