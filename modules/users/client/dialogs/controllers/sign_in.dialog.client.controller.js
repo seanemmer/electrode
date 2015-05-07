@@ -13,9 +13,11 @@ angular.module('users').controller('SignInDialogCtrl', ['Authentication', '$http
 				// If successful we assign the response to the global user model
 				console.log('signin');
 				console.log(response);
-				$scope.authentication.user = response;
-				$scope.authentication.user.currentVehicle = response.vehicles[0];
-				
+				Authentication.user = response;
+				Authentication.user.currentVehicle = _.find(response.vehicles, function(vehicle) {
+					return vehicle.primary === true;
+				});
+						
 				// and close/resolve the dialog (triggering redirect to /planning)
 				$mdDialog.hide();
 			}).error(function(response) {

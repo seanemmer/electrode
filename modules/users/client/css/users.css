@@ -1,17 +1,15 @@
 /* Register Dialog */
-.register-dialog {
-  height: 442px; }
-  .register-dialog h4 {
-    margin-top: 4px;
-    color: #616161;
-    color: rgba(0, 0, 0, 0.54); }
-  .register-dialog md-content {
-    height: 280px; }
-  .register-dialog .register-form {
-    margin-top: 8px; }
-  .register-dialog md-input-container {
-    width: 260px;
-    padding: 12px 14px; }
+.register-dialog h4 {
+  margin-top: 4px;
+  color: #616161;
+  color: rgba(0, 0, 0, 0.54); }
+.register-dialog md-content {
+  height: 280px; }
+.register-dialog .register-form {
+  margin-top: 8px; }
+.register-dialog md-input-container {
+  width: 260px;
+  padding: 12px 14px; }
 
 @media (max-width: 600px) {
   .register-dialog {
@@ -28,19 +26,17 @@
       width: 115%; } }
 
 /* Sign In Dialog */
-.sign-in-dialog {
-  height: 362px; }
-  .sign-in-dialog h4 {
-    margin-top: 4px;
-    color: #616161;
-    color: rgba(0, 0, 0, 0.54); }
-  .sign-in-dialog md-content {
-    height: 200px; }
-  .sign-in-dialog .sign-in-form {
-    margin-top: 8px; }
-  .sign-in-dialog md-input-container {
-    width: 260px;
-    padding: 12px 14px; }
+.sign-in-dialog h4 {
+  margin-top: 4px;
+  color: #616161;
+  color: rgba(0, 0, 0, 0.54); }
+.sign-in-dialog md-content {
+  height: 206px; }
+.sign-in-dialog .sign-in-form {
+  margin-top: 8px; }
+.sign-in-dialog md-input-container {
+  width: 260px;
+  padding: 12px 14px; }
 
 @media (max-width: 600px) {
   .sign-in-dialog {

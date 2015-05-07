@@ -38,6 +38,9 @@ angular.module('users').controller('RegisterDialogCtrl', ['Users', 'Vehicles', '
 			.then(function(payload) {
 				// If successful we assign the updated user to the global user model
 				Authentication.user = payload;
+				Authentication.user.currentVehicle = _.find(payload.vehicles, function(vehicle) {
+					return vehicle.primary === true;
+				});
 
 				// Close/resolve the dialog (triggering redirect to /planning)
 				$mdDialog.hide();
