@@ -1,7 +1,7 @@
 {
   "name": "electrode",
   "description": "Optimized charging for the Tesla Model S",
-  "version": "0.4.0",
+  "version": "0.1.0",
   "private": false,
   "author": "Sean Emmer",
   "repository": {
