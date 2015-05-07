@@ -11,7 +11,7 @@
     "angular-ui-utils": "~0.1.1",
     "angular-ui-router": "~0.2.10",
     "angular-file-upload": "~1.1.5",
-    "angular-material": "latest",
+    "angular-material": "~0.8.3",
     "angular-material-icons": "latest",
     "sass-material-colors": "~0.0.5",
     "angular-chart.js": "~0.5.3",
