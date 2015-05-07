@@ -11,6 +11,8 @@ angular.module('users').controller('SignInDialogCtrl', ['Authentication', '$http
 		$scope.dialogSignIn = function() {
 			$http.post('/api/auth/signin', $scope.credentials).success(function(response) {
 				// If successful we assign the response to the global user model
+				console.log('signin');
+				console.log(response);
 				$scope.authentication.user = response;
 				$scope.authentication.user.currentVehicle = response.vehicles[0];
 				
