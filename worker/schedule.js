@@ -32,7 +32,7 @@ if(moment().minute() < 53) {
 	fiveTill = moment().endOf('hour').add(1, 'h').subtract(4, 'm').format('H:mmA');	
 }
 
-agenda.create('dailyPullComEd').schedule('5:53pm').repeatEvery('1 day').save();
+agenda.create('dailyPullComEd').schedule('3:53pm').repeatEvery('1 day').save();
 agenda.create('hourlyPullComEd').schedule(sixTill).repeatEvery('1 hour').save();
 agenda.create('hourlyChargeQuery').schedule(fiveTill).repeatEvery('1 hour').save();		
 

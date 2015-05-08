@@ -13,7 +13,6 @@
     "npm": "~2.7.5"
   },
   "scripts": {
-    "start": "node server.js",
     "postinstall": "bower install --config.interactive=false"
   },
   "dependencies": {

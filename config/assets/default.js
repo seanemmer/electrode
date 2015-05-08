@@ -8,8 +8,8 @@ module.exports = {
 				'public/lib/angular-chart.js/dist/angular-chart.css'
 			],
 			js: [
-				'public/lib/angular/angular.js',
 				'public/lib/jquery/dist/jquery.js',
+				'public/lib/angular/angular.js',
 				'public/lib/angular-resource/angular-resource.js',
 				'public/lib/angular-animate/angular-animate.js',
 				'public/lib/angular-ui-router/release/angular-ui-router.js',
@@ -40,7 +40,7 @@ module.exports = {
 		views: ['modules/*/client/views/**/*.html']
 	},
 	server: {
-		allJS: ['gruntfile.js', 'server.js', 'config/**/*.js', 'modules/*/server/**/*.js'],
+		allJS: ['gulpfile.js', 'server.js', 'config/**/*.js', 'modules/*/server/**/*.js'],
 		models: 'modules/*/server/models/**/*.js',
 		routes: ['modules/!(core)/server/routes/**/*.js', 'modules/core/server/routes/**/*.js'],
 		sockets: 'modules/*/server/sockets/**/*.js',

@@ -30,7 +30,8 @@ module.exports = function(agenda) {
 			},
 			priceMatrix = job.attrs.data.prices,
 			schedule = [],
-			teslaData = {};
+			teslaData = {},
+			vehicleTimeStamp;
 
 		// GET vehicle data from db
 		Vehicle.findById(vehicle._id).exec()
@@ -48,20 +49,23 @@ module.exports = function(agenda) {
 			};			
 		})
 		.then(function() {
-
+			vehicleTimeStamp = '	[Vehicle: ' + vehicle._id + ', Date: ' + new Date() + ']';
 			// Check if car is plugged in, if not return (terminates job)
 			if(teslaData.charge_state.charging_state === 'unplugged') {
 				// terminate charge if currentCharge exists for vehicle
 				if(vehicle.currentCharge) {
 					terminateDbCharge(vehicle, teslaData.charge_state.battery_level);
 				}
-				console.log('Vehicle unplugged, terminating job; id = ' + vehicle._id);
+				console.log('Vehicle unplugged, terminating job');
 				return;
 			}			
 
 			// set today's charge if car is active today && time target is in the future && has less than today's target charge
+			var tempMoment = moment.utc(schedule[dayOfWeek].time, 'h:mm A');
+			var scheduledMoment = moment.tz('America/Los_Angeles').set({hours: tempMoment.hours(), minutes: tempMoment.minutes(), seconds: tempMoment.seconds()});
+
 			var todayBoolean =  schedule[dayOfWeek].active && 
-								moment.tz(timeZone).isBefore(moment(schedule[dayOfWeek].time, 'hh:mmA')) &&
+								moment.tz(timeZone).isBefore(scheduledMoment) &&
 							    teslaData.charge_state.battery_level < schedule[dayOfWeek].target;
 
 
@@ -72,12 +76,14 @@ module.exports = function(agenda) {
 
 			// Handle vehicles scheduled to charge today
 			if(todayBoolean) {
-				console.log('today');
+				console.log('Scheduled to charge to ' + schedule[dayOfWeek].target + '% by ' + schedule[dayOfWeek].time + ' today' + vehicleTimeStamp);
 				setChargeState(priceMatrix, vehicle, teslaData.charge_state.battery_level, teslaData.charge_state.time_to_full_charge, false);
 			// Handle vehicles scheduled to charge tomorrow
 			} else if (tomorrowBoolean) {
-				console.log('tomorrow');
+				console.log('Scheduled to charge to ' + schedule[dayOfWeek + 1].target + '% by ' + schedule[dayOfWeek + 1].time + ' tomorrow' + vehicleTimeStamp);
 				setChargeState(priceMatrix, vehicle, teslaData.charge_state.battery_level, teslaData.charge_state.time_to_full_charge, true);
+			} else {
+				console.log('Not scheduled to charge today/tomorrow or pricing unavailable' + vehicleTimeStamp);
 			}
 
 			// function to set vehicle charge state, requires:
@@ -160,7 +166,8 @@ module.exports = function(agenda) {
 					if(vehicle.currentCharge === null) {
 						initializeDbCharge(vehicle, currentLevel, dayAhead);
 					} else {
-						console.log('Charge continued for ' + vehicle._id + ' at ' + new Date() );
+									// log vehicle and date
+						console.log('Charge continued' + vehicleTimeStamp);
 					}
 				} else {
 					terminateDbCharge(vehicle, currentLevel);
@@ -199,7 +206,7 @@ module.exports = function(agenda) {
 					if(err) {
 						throw err;
 					}
-					console.log('Charge initialized for ' + vehicle._id + ' at ' + new Date());
+					console.log('Charge initialized' + vehicleTimeStamp);
 				});
 			});
 		}
@@ -223,11 +230,11 @@ module.exports = function(agenda) {
 							if(err) {
 								throw err;
 							}
-							console.log('Charge terminated for ' + vehicle._id + ' at ' + new Date());
+							console.log('Charge terminated' + vehicleTimeStamp);
 						});						
 					});
 				} else {
-					console.log('Note: Charge termination unnecessary, no open charges.');
+					console.log('Charge left uninitialized' + vehicleTimeStamp);
 				}
 			});
 		}
@@ -258,10 +265,10 @@ module.exports = function(agenda) {
 
 			// Pull today and tomorrow's pricing from db
 			var todayLookupDate = new Date();
-			todayLookupDate.setDate(todayLookupDate.getDate() - 1);
 			todayLookupDate.setHours(0,0,0,0);
 
 			var tomorrowLookupDate = new Date();
+			tomorrowLookupDate.setDate(tomorrowLookupDate.getDate() + 1);
 			tomorrowLookupDate.setHours(0,0,0,0);
 
 			Q.all([
