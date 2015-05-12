@@ -1,13 +1,17 @@
 'use strict';
 
-angular.module('core').controller('HeaderCtrl', ['$mdToast', '$location', '$http', '$mdDialog', '$scope', '$state', 'Authentication',
-	function($mdToast, $location, $http, $mdDialog, $scope, $state, Authentication) {
+angular.module('core').controller('HeaderCtrl', ['$mdBottomSheet', '$mdToast', '$location', '$http', '$mdDialog', '$scope', '$state', 'Authentication',
+	function($mdBottomSheet, $mdToast, $location, $http, $mdDialog, $scope, $state, Authentication) {
 		// Expose view variables
 		$scope.state = $state;
 		$scope.authentication = Authentication;
 
 		// set selected tab based on current view state
 		$scope.$watch('state.current.name', function(newVal, oldVal) {
+			if(newVal !== 'history') {
+				$mdBottomSheet.hide();
+			}
+
 			switch($state.current.name) {
 				case 'home':
 					$scope.tabIndex = 0;

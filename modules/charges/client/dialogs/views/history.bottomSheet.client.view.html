@@ -1,1 +1,35 @@
-<md-bottom-sheet>Hello World!</md-bottom-sheet>
+<md-bottom-sheet class="history-bottom-sheet">
+	<md-toolbar class="history-toolbar-header">
+		<div layout="row" class="md-toolbar-tools" layout-align="center">
+			<span>Charge History - January 16, 2015</span>
+			<md-button ng-click="closeHistory()" class="history-bottom-close-button"><ng-md-icon icon="close" style="fill:white;"></ng-md-icon></md-button>
+		</div>
+	</md-toolbar>
+	<div layout="row" layout-align="center start" layout-margin>
+		<div layout="column" flex="65" layout-align="start center" class="history-module time-series-container">
+			<h2>Charge Time Series</h2>
+			<canvas id="line" class="chart chart-line" data="timeSeriesData"
+			  labels="timeSeriesLabels" legend="true" series="timeSeriesSeries"
+			  click="onClick">
+			</canvas> 
+		</div>
+		<div layout="column" flex="35" layout-align="start center">
+			<div layout="row">
+				<div layout="column" layout-align="start center" class="history-module cost-comparison-container">
+					<h2>Cost Comparison</h2>
+					<canvas id="bar" class="chart chart-bar" data="costComparisonData"
+					  labels="costComparisonLabels" legend="true" series="costComparisonSeries">
+					</canvas> 
+				</div>
+			</div>
+			<div layout="row">
+				<div layout="column" layout-align="start center" class="history-module histogram-container">
+					<h2>Price Histogram</h2>
+					<canvas id="bar" class="chart chart-bar" data="histogramData"
+					  labels="histogramLabels" legend="true" series="histogramSeries">
+					</canvas> 
+				</div>
+			</div>
+		</div>
+	</div>
+</md-bottom-sheet>

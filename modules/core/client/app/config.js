@@ -30,7 +30,8 @@ var ApplicationConfiguration = (function() {
 
 	chartConfig.colours = [
 		'#00BCD4',
-		'#CDDC39'
+		'#CDDC39',
+		'#FCE4EC'
 	];
 
 	return {

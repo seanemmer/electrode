@@ -3,8 +3,6 @@
 angular.module('vehicles').controller('PlanningCtrl', ['$window', '$mdToast', 'Vehicles', 'Users', 'Authentication', '$timeout', '$scope', '$mdDialog',
 	function($window, $mdToast, Vehicles, Users, Authentication, $timeout, $scope, $mdDialog) {
 		$scope.authentication = Authentication;
-		console.log('authentication');
-		console.log(Authentication);
 		$scope.currentVehicle = Authentication.user.vehicles[0];
 
 		// Expose mobile device boolean and set label text

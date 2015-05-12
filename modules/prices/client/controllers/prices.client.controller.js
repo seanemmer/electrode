@@ -72,6 +72,7 @@ angular.module('core').controller('PricesCtrl', ['$scope', '$http',
 
 				// update chart data on scope
 				$scope.chartData = tempData;
+				console.log(tempData);
 			}, function(response) {
 				console.log('Error retreiving data!');
 			});

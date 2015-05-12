@@ -30,7 +30,7 @@
 	}
 
 	.history-list-entry:hover {
-		background-color: material-color('lime', 'a100')
+		background-color: material-color('lime', 'a100');
 	}
 }
 
@@ -54,3 +54,39 @@
 		font-size: 12px;
 	}
 }
+
+/* History Bottom Sheet */
+
+.history-bottom-sheet {
+	padding: 0;
+	margin: 0;
+	height: calc(100% - 60px);
+
+	md-toolbar {
+		margin-top: 0;
+	}
+
+	>div {
+		margin-top: 20px;
+	}
+
+	.history-bottom-close-button {
+		position: absolute;
+		right: 8px;
+		top: 8px;
+		padding: 2px;
+
+		svg {
+			margin-top: 2px
+		}
+	}
+
+	.history-module {
+
+		.chart-container {
+			max-width: 900px;
+			width: 98%;
+		}
+	}
+}
+
