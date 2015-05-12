@@ -41,7 +41,7 @@
 			</md-toolbar>
 			<ul class="history-list">
 								
-				<li ng-repeat="entry in filteredEntries =(entries | historyTable: year:month)" class="history-list-entry">
+				<li ng-repeat="entry in filteredEntries =(entries | historyTable: year:month)" class="history-list-entry" ng-click="entryClick()">
 					<div layout="row" layout-align="space-between">
 						<h4 class="unbold">{{entry.month}} {{entry.day}}, {{entry.year}}</h4>
 						<div layout="row" layout-align="end">

@@ -18,11 +18,6 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 				url: '/learn',
 				templateUrl: 'modules/core/views/learn.client.view.html',
 				controller: 'LearnCtrl'
-			})
-			.state('history', {
-				url: '/history',
-				templateUrl: 'modules/core/views/history.client.view.html',
-				controller: 'HistoryCtrl'
 			});
 	}
 ]);

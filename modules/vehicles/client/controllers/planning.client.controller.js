@@ -5,7 +5,7 @@ angular.module('vehicles').controller('PlanningCtrl', ['$window', '$mdToast', 'V
 		$scope.authentication = Authentication;
 		console.log('authentication');
 		console.log(Authentication);
-		$scope.currentVehicle = Authentication.user.currentVehicle;
+		$scope.currentVehicle = Authentication.user.vehicles[0];
 
 		// Expose mobile device boolean and set label text
 		if($window.innerWidth <=600) {

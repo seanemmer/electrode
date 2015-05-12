@@ -1,0 +1,46 @@
+/* sass-material-colors */
+/**
+ * Retrieves a color value from the $material-colors Sass map
+ * Inspired by https://github.com/nilskaspersson/Google-Material-UI-Color-Palette/
+ *
+ * @function
+ * @param {string} color-name             - quoted, lower-case, dasherized color
+ *                                          name (e.g. 'pink', 'amber')
+ * @param {string} [color-variant='500']  - quoted, lowercase color variant (e.g.
+ *                                          '200', 'a100')
+ */
+/* History Page */
+.history-toolbar-header {
+  margin-top: 12px;
+  background-color: #4dd0e1 !important;
+  min-height: 36px; }
+
+.history-filter {
+  width: 100%;
+  padding: 0 20px; }
+
+.history-list {
+  list-style-type: none;
+  margin-top: 8px;
+  padding: 0;
+  width: 100%; }
+  .history-list .history-list-entry {
+    padding: 12px 16px 12px 15px;
+    cursor: pointer; }
+    .history-list .history-list-entry .history-list-entry-target-container {
+      width: 48px; }
+  .history-list .history-list-entry:hover {
+    background-color: #f4ff81; }
+
+@media (min-width: 601px) {
+  .history-toolbar-header {
+    height: 48px; } }
+
+@media (max-width: 600px) {
+  .history-toolbar-header {
+    font-size: 16px;
+    height: 36px; }
+  .history-filter {
+    font-size: 14px; }
+  .history-list-entry {
+    font-size: 12px; } }

@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('core').controller('HistoryCtrl', ['$mdSidenav', '$scope', 'Authentication',
-	function($mdSidenav, $scope, Authentication) {
+angular.module('charges').controller('HistoryCtrl', ['$mdBottomSheet', '$scope', 'Authentication',
+	function($mdBottomSheet, $scope, Authentication) {
 		// This provides Authentication context.
 		$scope.authentication = Authentication;
 
@@ -31,37 +31,43 @@ angular.module('core').controller('HistoryCtrl', ['$mdSidenav', '$scope', 'Authe
 				'day': 29,
 				'year': 2015,
 				'target': '85',
-				'time': '8:00AM'
+				'time': 'SAMPLE'
 			},
 			{
 				'month': 'December',
 				'day': 30,
 				'year': 2015,
 				'target': '85',
-				'time': '8:00AM'
+				'time': 'SAMPLE'
 			},
 			{
 				'month': 'December',
 				'day': 31,
 				'year': 2015,
 				'target': '65',
-				'time': '1:30PM'
+				'time': 'SAMPLE'
 			},
 			{
 				'month': 'January',
 				'day': 1,
 				'year': 2016,
 				'target': '85',
-				'time': '9:00AM'
+				'time': 'SAMPLE'
 			},
 			{
 				'month': 'January',
 				'day': 2,
 				'year': 2016,
-				'date': 'January 2, 2016',
 				'target': '100',
-				'time': '8:00AM'
+				'time': 'SAMPLE'
 			}
 		];
+
+		$scope.entryClick = function() {
+			$mdBottomSheet.show({
+				templateUrl: 'modules/charges/dialogs/views/history.bottomSheet.client.view.html',
+				controller: 'HistoryBottomSheetCtrl'
+			});
+		};
 	}
 ]);
