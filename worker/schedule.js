@@ -36,4 +36,6 @@ agenda.create('dailyPullComEd').schedule('3:53pm').repeatEvery('1 day').save();
 agenda.create('hourlyPullComEd').schedule(sixTill).repeatEvery('1 hour').save();
 agenda.create('hourlyChargeQuery').schedule(fiveTill).repeatEvery('1 hour').save();		
 
+console.log('Clock process updated at ' + new Date());
+
 module.exports = agenda;

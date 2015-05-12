@@ -12,7 +12,8 @@ var moment = require('moment-timezone'),
 	mongoose = require('mongoose'),
 	Vehicle = mongoose.model('Vehicle'),
 	Charge = mongoose.model('Charge'),
-	Price = mongoose.model('Price');
+	Price = mongoose.model('Price'),
+	TestCar = mongoose.model('TestCar');
 
 
 module.exports = function(agenda) {
@@ -39,14 +40,26 @@ module.exports = function(agenda) {
 			vehicle = payload;
 			schedule = payload.schedule;
 
-			// GET charge_state data from tesla (using dummy here)
-			teslaData = {
-				charge_state: {
-					charging_state: 'plugged_in', //unplugged
-					time_to_full_charge: 181,
-					battery_level: 45
+			// GET charge_state data from Tesla (using TestCar Model here)
+			TestCar.findOneAndUpdate({}, function(err, testCar) {
+				if(err) {
+					throw err;
 				}
-			};			
+				teslaData = {
+					charge_state: {
+						charging_state: 'plugged_in', //unplugged
+						time_to_full_charge: testCar.timeToFullCharge,
+						battery_level: 45
+					}
+				};
+				// mimic actually charge period by subtracting 60 minutes
+				testCar.timeToFullCharge = Math.max(0, testCar.timeToFullCharge - 60);
+				testCar.save(function(err) {
+					if(err) {
+						throw err;
+					}
+				});
+			});		
 		})
 		.then(function() {
 			vehicleTimeStamp = '	[Vehicle: ' + vehicle._id + ', Date: ' + new Date() + ']';
@@ -166,7 +179,7 @@ module.exports = function(agenda) {
 					if(vehicle.currentCharge === null) {
 						initializeDbCharge(vehicle, currentLevel, dayAhead);
 					} else {
-									// log vehicle and date
+						// log vehicle and date
 						console.log('Charge continued' + vehicleTimeStamp);
 					}
 				} else {
