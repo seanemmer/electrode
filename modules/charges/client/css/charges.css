@@ -62,5 +62,7 @@
     .history-bottom-sheet .history-bottom-close-button svg {
       margin-top: 2px; }
   .history-bottom-sheet .history-module .chart-container {
-    max-width: 900px;
-    width: 98%; }
+    width: 100%;
+    max-width: 900px; }
+  .history-bottom-sheet .time-series-container {
+    padding-left: 20px; }

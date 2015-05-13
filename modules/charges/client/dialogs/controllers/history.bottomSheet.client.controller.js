@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('charges').controller('HistoryBottomSheetCtrl', ['$mdBottomSheet', '$scope', 'Authentication',
-	function($mdBottomSheet, $scope, Authentication) {
+angular.module('charges').controller('HistoryBottomSheetCtrl', ['$timeout', '$mdBottomSheet', '$scope', 'Authentication',
+	function($timeout, $mdBottomSheet, $scope, Authentication) {
 		// This provides Authentication context.
 		$scope.authentication = Authentication;
 
@@ -18,14 +18,20 @@ angular.module('charges').controller('HistoryBottomSheetCtrl', ['$mdBottomSheet'
 		];
 
 		$scope.costComparisonLabels = [2015];
-		$scope.costComparisonSeries = ['Naive', 'Electrode'];
-		$scope.costComparisonData = [[4.03], [3.00]];
+		$scope.costComparisonSeries = ['Electrode', 'Naive'];
+		$scope.costComparisonData = [[3.03], [4.00]];
 
 		$scope.histogramLabels = ['0','1','2','3','4','5','6','7','8','9','10+'];
-		$scope.histogramSeries = ['Naive', 'Electrode'];
+		$scope.histogramSeries = ['Electrode', 'Naive'];
 		$scope.histogramData = [
-			[0,0,1,2,2,1,0,0,0,0],
-			[3,1,2,0,0,0,0,0,0,0]
+			[3,1,2,0,0,0,0,0,0,0],
+			[0,0,1,2,2,1,0,0,0,0]
 		];
+
+		$timeout(function() {
+			var canvas = document.getElementById('line');
+			var ctx = canvas.getContext('2d');
+			console.log(ctx);
+		});
 	}
 ]);

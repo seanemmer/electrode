@@ -19,7 +19,7 @@ module.exports = {
 				'public/lib/angular-material/angular-material.js',
 				'public/lib/angular-material-icons/angular-material-icons.js',
 				'public/lib/Chart.js/Chart.js',
-				'public/lib/angular-chart.js/dist/angular-chart.js',
+				'public/lib/angular-chart.js/angular-chart.js',
 				'public/lib/moment/moment.js',
 				'public/lib/lodash/lodash.js'
 			],

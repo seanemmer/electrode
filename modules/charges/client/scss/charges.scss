@@ -82,11 +82,13 @@
 	}
 
 	.history-module {
-
 		.chart-container {
+			width: 100%;
 			max-width: 900px;
-			width: 98%;
 		}
 	}
-}
 
+	.time-series-container {
+		padding-left: 20px; 
+	}
+}

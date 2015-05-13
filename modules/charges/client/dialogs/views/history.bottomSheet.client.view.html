@@ -2,21 +2,20 @@
 	<md-toolbar class="history-toolbar-header">
 		<div layout="row" class="md-toolbar-tools" layout-align="center">
 			<span>Charge History - January 16, 2015</span>
-			<md-button ng-click="closeHistory()" class="history-bottom-close-button"><ng-md-icon icon="close" style="fill:white;"></ng-md-icon></md-button>
+			<md-button ng-click="closeHistory()" class="history-bottom-close-button" aria-label="close-history"><ng-md-icon icon="close" style="fill:white;"></ng-md-icon></md-button>
 		</div>
 	</md-toolbar>
 	<div layout="row" layout-align="center start" layout-margin>
 		<div layout="column" flex="65" layout-align="start center" class="history-module time-series-container">
 			<h2>Charge Time Series</h2>
 			<canvas id="line" class="chart chart-line" data="timeSeriesData"
-			  labels="timeSeriesLabels" legend="true" series="timeSeriesSeries"
-			  click="onClick">
+			  labels="timeSeriesLabels" legend="true" series="timeSeriesSeries">
 			</canvas> 
 		</div>
 		<div layout="column" flex="35" layout-align="start center">
 			<div layout="row">
 				<div layout="column" layout-align="start center" class="history-module cost-comparison-container">
-					<h2>Cost Comparison</h2>
+					<h2>Total Cost Comparison</h2>
 					<canvas id="bar" class="chart chart-bar" data="costComparisonData"
 					  labels="costComparisonLabels" legend="true" series="costComparisonSeries">
 					</canvas> 
